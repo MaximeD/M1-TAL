@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+#!/usr/bin/ruby -w
 
 puts "Entrez un nom commun masculin singulier : "
 $nom = gets.chomp

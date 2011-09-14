@@ -1,13 +1,11 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl -w
 
 use strict ;
 use locale ;
-use warnings ;
 
 # variables you have to declare
-# beacause of 'use strict'
-my $nom ;
-my $pluriel ;
+# because of 'use strict'
+my ($nom, $pluriel) ;
 
 print "Entrez un nom commun masculin singulier : " ;
 chomp($nom = <STDIN>);

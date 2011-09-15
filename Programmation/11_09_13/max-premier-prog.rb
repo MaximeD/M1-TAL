@@ -1,11 +1,11 @@
 #!/usr/bin/ruby -w
 
 puts "Entrez un nom commun masculin singulier : "
-$nom = gets.chomp
+nom = gets.chomp
 
 
-$pluriel = $nom + "s" # well, let's say that most of the time it works
+pluriel = nom + "s" # well, let's say that most of the time it works
 
-puts "Les flexions de #{$nom} sont :
-un #{$nom},
-des #{$pluriel}\n" 
+puts "Les flexions de #{nom} sont :
+un #{nom},
+des #{pluriel}\n" 

@@ -7,4 +7,4 @@ age = raw_input('How old are you ?\n')
 print "You are %s years old\n" % age
 
 print "Have " + "a " + "nice " + "day " + prenom
-#print "bonne" , " journee " , $prenom , "\n" ;
+

@@ -1,5 +1,7 @@
 #!/usr/bin/perl -w
 
+use strict ;
+
 print "Comment vous appelez -vous ?\n" ;
 $prenom = <STDIN> ;
 chomp( $prenom ) ;

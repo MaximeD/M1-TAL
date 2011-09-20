@@ -32,7 +32,3 @@ print "The sum is : $for_total\n" ;
 my $for_avg = $for_total / $#a ;
 print "The average is : $for_avg\n" ;
 
-
-
-
-

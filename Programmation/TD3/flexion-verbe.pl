@@ -10,8 +10,7 @@ my @terminaisons_2 = ( "is", "is", "it", "issons", "issez", "issent" ) ;
 sub Conjugate{
     print "Les formes du verbe \"$verb\" au présent de l'indicatif sont :\n" ;
     
-    $inf = $verb ;
-    $inf =~ s/.{2}$//;
+    ($inf = $verb) =~ s/.{2}$// ;
 
     for ($i=0; $i<@pronoms; $i++)
     {

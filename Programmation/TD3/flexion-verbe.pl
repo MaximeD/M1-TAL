@@ -10,6 +10,9 @@ my @terminaisons_2 = ( "is", "is", "it", "issons", "issez", "issent" ) ;
 sub Conjugate{
     print "Les formes du verbe \"$verb\" au présent de l'indicatif sont :\n" ;
     
+    $inf = $verb ;
+    $inf =~ s/.{2}$//;
+
     for ($i=0; $i<@pronoms; $i++)
     {
 	print $pronoms[$i] . " " . $inf . $terminaisons[$i] . "\n" ;
@@ -20,15 +23,11 @@ print "Entrez un verbe du 1er ou du 2eme groupe : " ;
 chomp($verb=<STDIN>) ;
 
 if ($verb =~ m/er$/){
-    $inf = $verb ;
-    $inf =~ s/er$//;
     @terminaisons = @terminaisons_1 ;
     &Conjugate ;
 }       
  
 elsif ($verb =~ m/ir$/){
-    $inf = $verb ;
-    $inf =~ s/ir$//;
     @terminaisons = @terminaisons_2 ;
     &Conjugate ;
 }

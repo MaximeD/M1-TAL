@@ -1,0 +1,47 @@
+<simulations>
+  <simulation taux=  "8.25" >
+    <prix> 12500 </prix>
+    <montant> 7600 </montant>
+    <duree> 2 </duree>
+    <reprise> 205 GRD 2005 </reprise>
+    <client>
+      <nom> Masson </nom>
+      <prenom> Pierre </prenom>
+      <adresse type= "pers" >
+	<ligneadresse> 12 place de la gare </ligneadresse>
+	<ligneadresse> 69003 Lyon </ligneadresse>
+      </adresse>
+      <adresse type= "bureau" >
+	<ligneadresse> 69621 Villeurbanne </ligneadresse>
+      </adresse>
+    </client>
+    <datesimul>
+      <date> 04/01/08 </date>
+      <heure> 17:00:00 </heure>
+    </datesimul>
+    <mensualite> 350,00 </mensualite>
+    <couttotal> 8400,00 </couttotal>
+  </simulation>
+  <simulation taux= "10.33" >
+    <prix> 18320</prix>
+    <montant> 12500 </montant>
+    <duree> 5 </duree>
+    <client>
+      <nom> Dupond </nom>
+      <prenom> Jacques </prenom>
+      <adresse type= "pers" >
+	<ligneadresse> 6 place de l'église</ligneadresse>
+	<ligneadresse> 67400 Illkirch </ligneadresse>
+      </adresse>
+      <adresse type= "bureau" >
+	<ligneadresse> 69621 Villeurbanne </ligneadresse>
+      </adresse>
+    </client>
+    <datesimul>
+      <date> 04/01/08 </date>
+      <heure> 17:30:00 </heure>
+    </datesimul>
+    <mensualite> 396,00 </mensualite>
+    <couttotal> 23760,00 </couttotal>
+  </simulation>
+</simulations>

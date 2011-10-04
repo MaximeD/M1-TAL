@@ -31,4 +31,4 @@ elsif ($verb =~ m/ir$/){
     &Conjugate ;
 }
 
-else{print "\"$verb\" n'est pas un verbe du premier ou du second groupe !\n"}
+else{die "\"$verb\" n'est pas un verbe du premier ou du second groupe !\n"}

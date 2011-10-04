@@ -1,3 +1,26 @@
+<!DOCTYPE simulations [
+
+<!ELEMENT simulations (simulation)+>
+<!ELEMENT simulation (prix,montant,duree,reprise,client,datesimul,mensualite,souttotal)>
+      <!ATTLIST simulation taux CDATA>
+  <!ELEMENT prix (#PCDATA)>
+  <!ELEMENT montant (#PCDATA)>
+  <!ELEMENT duree (#PCDATA)>
+  <!ELEMENT reprise (#PCDATA)>
+  <!ELEMENT client (nom,prenom,adresse)>
+    <!ELEMENT nom (#PCDATA)>
+    <!ELEMENT prenom (#PCDATA)>
+    <!ELEMENT adresse (ligneadresse)>
+    <!ATTLIST adresse type CDATA>
+      <!ELEMENT ligneadresse (#PCDATA)>
+  <!ELEMENT datesimul (date,heure)>
+    <!ELEMENT date (#PCDATA)>
+    <!ELEMENT heure (#PCDATA)>
+  <!ELEMENT mensualite (#PCDATA)>
+  <!ELEMENT couttotal (#PCDATA)>
+
+]>
+
 <simulations>
   <simulation taux=  "8.25" >
     <prix> 12500 </prix>

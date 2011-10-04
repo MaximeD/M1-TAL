@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE commandes [
+
+<!ELEMENT commandes (commande)+>
+<!ELEMENT commande (date,articles)+>
+  <!ELEMENT date (jour,mois,annee)>
+    <!ELEMENT jour (#PCDATA)>
+    <!ELEMENT mois (#PCDATA)>
+    <!ELEMENT annee (#PCDATA)>
+
+  <!ELEMENT articles (article)+>
+    <!ELEMENT article (code_tissu,description_article,quantite,qt_dispo,date_livraison)>
+      <!ELEMENT description_article (#PCDATA)>
+      <!ELEMENT code_tissu EMPTY>
+      <!ELEMENT quantite (#PCDATA)>
+      <!ELEMENT qt_dispo (#PCDATA)>
+      <!ELEMENT date_livraison (jour,mois,annee)>
+
+<!ATTLIST commande id ID #REQUIRED id_client CDATA #REQUIRED id_fournisseur CDATA #REQUIRED>
+
+<!ATTLIST article couleur ID #REQUIRED>
+
+<!ATTLIST code_tissu id ID #REQUIRED largeur (90|120|140|150) #REQUIRED>
+
+]>
+
+
+<commandes>
+<!-- Commande 1 -->
+  <commande id="c45" id_client="c65" id_fournisseur="f465">
+    <date>
+      <jour>25</jour>
+      <mois>février</mois>
+      <annee>2011</annee>
+    </date>
+
+    <articles>
+<!-- Article 1 -->
+      <article couleur="c15">
+<code_tissu id="c513" largeur="140"/>
+<description_article>Du tissu</description_article>
+<quantite>13</quantite>
+<qt_dispo>64</qt_dispo>
+<date_livraison>
+<jour>24</jour>
+<mois>15</mois>
+<annee>1965</annee>
+</date_livraison>
+      </article>
+
+<!-- Article 2 -->
+      <article couleur="c56">
+<code_tissu id="c153" largeur="90"/>
+<description_article>Et encore du tissu !</description_article>
+<quantite>56</quantite>
+<qt_dispo>138</qt_dispo>
+<date_livraison>
+<jour>15</jour>
+<mois>02</mois>
+<annee>1979</annee>
+</date_livraison>
+      </article>
+
+    </articles>
+  </commande>
+
+<!-- Commande 2 -->
+  <commande id="c46" id_client="c89" id_fournisseur="f846">
+    <date>
+      <jour>16</jour>
+      <mois>09</mois>
+      <annee>2023</annee>
+    </date>
+
+    <articles>
+      <article couleur="c5">
+<code_tissu id="c3" largeur="140"/>
+<description_article>Et du nouveau tissu</description_article>
+<quantite>513</quantite>
+<qt_dispo>864</qt_dispo>
+<date_livraison>
+<jour>24</jour>
+<mois>15</mois>
+<annee>1965</annee>
+</date_livraison>
+      </article>
+    </articles>
+  </commande>
+
+</commandes>

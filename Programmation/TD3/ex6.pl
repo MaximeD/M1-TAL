@@ -10,13 +10,7 @@ my $total = 0 ;
 # construit un tableau
 @tab = split(/ /, $s) ;
 
-# compte le nombre de mots
-foreach (@tab)
-{
-    $total += 1 ;
-}
-
-print "La chaine contient $total mots\n" ;
+print "La chaine contient " . @tab . " mots\n" ;
 
 # affiche le premier et le dernier mot dans l'ordre alphabétique
 my $s_2 = lc($s) ;

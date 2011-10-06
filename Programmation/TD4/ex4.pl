@@ -21,8 +21,7 @@ sub Conjugate{
 
   open(IMPARFAIT, '>', "$verb-imparfait.txt") ;
   # imparfait = 1ere pers pluriel + terminaisons
-  $inf = $inf . $terminaisons[3] ;
-  $inf =~ s/.{3}$// ;
+  ($inf = $inf . $terminaisons[3]) =~ s/.{3}$// ;
   for ($i=0; $i<@pronoms; $i++)
     {
       print (IMPARFAIT $pronoms[$i] . " " . $inf . $terminaisons_imparfait[$i] . "\n") ;

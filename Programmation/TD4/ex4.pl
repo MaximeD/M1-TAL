@@ -2,7 +2,7 @@
 use warnings ;
 use strict ;
 
-my ( $radical, $inf, $verb, $i ) ;
+my ( $radical, $inf, $inf_imp, $verb, $i ) ;
 my @terminaisons ;
 my @pronoms = ( "je", "tu", "il/elle", "nous", "vous", "ils/elles" ) ;
 my @terminaisons_present_1 = ( "e", "es", "e", "ons", "ez", "ent" ) ;
@@ -12,21 +12,15 @@ my @terminaisons_imparfait = ("ais", "ais", "ait", "ions", "iez", "aient") ; # i
 
 sub Conjugate{
   open(PRESENT, '>', "$verb-present.txt") ;
+  open(IMPARFAIT, '>', "$verb-imparfait.txt") ;
   ($inf = $verb) =~ s/.{2}$// ;
+  ($inf_imp = $inf . $terminaisons[3]) =~ s/.{3}$// ; # imparfait = 1ere pers pluriel + terminaisons
 
   for ($i=0; $i<@pronoms; $i++)
     {
       print (PRESENT $pronoms[$i] . " " . $inf . $terminaisons[$i] . "\n") ;
+      print (IMPARFAIT $pronoms[$i] . " " . $inf_imp . $terminaisons_imparfait[$i] . "\n") ;
     }
-
-  open(IMPARFAIT, '>', "$verb-imparfait.txt") ;
-  # imparfait = 1ere pers pluriel + terminaisons
-  ($inf = $inf . $terminaisons[3]) =~ s/.{3}$// ;
-  for ($i=0; $i<@pronoms; $i++)
-    {
-      print (IMPARFAIT $pronoms[$i] . " " . $inf . $terminaisons_imparfait[$i] . "\n") ;
-    }
-
 }
 
 print "Entrez un verbe du 1er ou du 2eme groupe : " ;

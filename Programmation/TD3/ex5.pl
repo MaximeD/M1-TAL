@@ -22,7 +22,6 @@ foreach $tableau(@tableau)
 print "La valeur max de \@tableau est $max\n" ;
 
 # where
-
 for ($i=0; $i < 8; $i++){
     if ($max == $tableau[$i])
     {

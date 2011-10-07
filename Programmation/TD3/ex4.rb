@@ -5,9 +5,7 @@ value_to_search = 3
 total = 0
 
 array.each{|x|
-  if x == value_to_search
-    total += 1
-  end
+      total += 1 if x == value_to_search
 }
 
 puts "There is " + total.to_s + " time(s) \"" + value_to_search.to_s + "\" in array"

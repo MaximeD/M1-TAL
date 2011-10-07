@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-# How many times do we have $value ?
-
 use strict ;
 use locale ;
 
@@ -11,7 +9,6 @@ my $value = 0 ;
 my $max = 0 ;
 my $i ;
 my @place = () ;
-
 
 # maximum
 foreach $tableau(@tableau)
@@ -26,13 +23,10 @@ print "La valeur max de \@tableau est $max\n" ;
 
 # where
 
-#foreach $tableau(@tableau)
 for ($i=0; $i < 8; $i++){
     if ($max == $tableau[$i])
     {
 	@place = (@place, $i + 1) ;
-#	print "$i\n" ;
-#	print @place ;
     }
 }
 

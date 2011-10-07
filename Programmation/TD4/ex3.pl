@@ -2,10 +2,9 @@
 use warnings;
 use strict;
 
-my (@noms, $nom, @pluriels, $pluriel, @invar, $invar, $i) ;
+my (@noms, $nom, @pluriels, $pluriel, $i) ;
 
 open(INVAR, '<', "noms-invariables.txt") or die "Vous devez avoir un fichier contenant les noms invariables !\n" ;
-@invar = <INVAR> ;
 
 print "Entrez autant de noms commun masculin singulier que vous le voulez
 (Tappez \"X\" pour continuer) : \n" ;
@@ -21,8 +20,8 @@ while (1)
 # définition des pluriels
 foreach $nom(@noms)
   {
-    ($pluriel = $nom) if (grep (/$nom\n/, @invar ));
-    ($pluriel = $nom . "s") if (!grep (/$nom\n/, @invar ));
+    ($pluriel = $nom) if (grep (/$nom\n/, <INVAR> ));
+    ($pluriel = $nom . "s") if (!grep (/$nom\n/, <INVAR> ));
     @pluriels = (@pluriels, $pluriel);
   }
 

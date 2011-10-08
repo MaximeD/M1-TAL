@@ -17,8 +17,7 @@ verb = gets.chomp
 
 if verb =~ /er$/
   conjugate(verb, terminaisons_1)
-elsif
-  verb =~ /ir$/
+elsif verb =~ /ir$/
   conjugate(verb, terminaisons_2)
 else
   puts "Ceci n'est pas un verbe du premier ou du second groupe !"

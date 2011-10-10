@@ -22,7 +22,7 @@ while (1)
 
 # définition des pluriels
 while (($index, $nom) = each @noms){
-    ($pluriel = $nom) ;#if (grep (/$nom\n/, @invar ));
+    ($pluriel = $nom) ;
     ($pluriel = $nom . "s") if (!grep (/$nom\n/, @invar ));
     @pluriels = (@pluriels, $pluriel);
 

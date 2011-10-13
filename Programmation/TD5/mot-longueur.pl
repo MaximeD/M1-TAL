@@ -36,10 +36,7 @@ for ($i = 0 ; $i < $#grimm ;$i++)
     @words5 = ();
     foreach (@lines_of_grimm)
       {
-	if (length($_) == 5)
-	  {
-	    @words5 = (@words5, lc($_)) ;
-	  }
+	@words5 = (@words5, lc($_)) if length($_) == 5;
       }
     print encode("utf8", join(", ", @words5)) ;
     print "\n" ;

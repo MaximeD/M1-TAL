@@ -10,11 +10,11 @@ $invar = "noms-invariables.txt" ;
 open (INVAR, "<", $invar) ;
 my @invar = <INVAR> ;
 
-my %irregular = (
-		 ail => 'aulx',
-		 ciel => 'cieux',
-		 oeil => 'yeux'
-		);
+my %fun_var = (
+	     ail => 'aulx',
+	     ciel => 'cieux',
+	     oeil => 'yeux'
+	    );
 
 print "Entrez autant de noms commun masculin singulier que vous le voulez
 (Tappez \"X\" pour continuer) : \n" ;
@@ -33,8 +33,8 @@ foreach $nom(@noms)
   if (grep (/$nom\n/, @invar )) {
     $pluriel = $nom ;
   }
-  elsif (exists $irregular{$nom}) {
-    $pluriel = $irregular{$nom} ;
+  elsif (exists $fun_var{$nom}) {
+    $pluriel = $fun_var{$nom} ;
   }
   else {
     $pluriel = $nom . "s" ;
@@ -43,8 +43,8 @@ foreach $nom(@noms)
 }
 
 for ($i=0 ; $i < @noms ; $i++)
-  {
+{    
     print "\nLes flexions de \"" , $noms[$i] , "\" sont :\n" ;
     print "un ", $noms[$i], ", des " , $pluriels[$i] , "\n" ;
-  }
+}
 

@@ -12,7 +12,7 @@ my @mots ;
 my %freq ;
 while (my $ligne = <GRIMM>) {
   chomp ($ligne) ;
-  @mots = split (/ /, $ligne);
+  @mots = split (/[ ‒:,'\-;!\?\.]/, $ligne);
   foreach my $mot(@mots) {
     $freq{ lc ($mot) }++ ;
   }
@@ -23,16 +23,16 @@ while (my $ligne = <GRIMM>) {
 my @sorted = sort { ( $freq{$b} <=> $freq{$a}) or ($a cmp $b) } keys %freq ;
 
 # 10 most frequent words
-print "Les dix mots les plus fréquents et leur nombre d'occurences sont :\n";
+print encode("utf8", "Les dix mots les plus fréquents et leur nombre d'occurences sont :\n");
 
 my $i ;
-for ($i = 0 ; $i < 10 ; $i++) {
-  print "$sorted[$i] \t $freq{$sorted[$i]} \n";
+for ($i = 1 ; $i < 11 ; $i++) { # cheating with space which appear first
+  print encode("utf8", "$sorted[$i] \t $freq{$sorted[$i]} \n");
 }
 
 
 # hapax
-print "\nOn ne trouve qu'une seule occurence des mots suivants :\n" ;
+print encode("utf8", "\nOn ne trouve qu'une seule occurence des mots suivants :\n") ;
 
 my @once ;
 foreach my $key(@sorted) {
@@ -41,7 +41,7 @@ foreach my $key(@sorted) {
       @once = (@once, $key) ;
     }
 }
-print join (", ", @once), "\n" ;
+print encode("utf8", join (", ", @once)), "\n" ;
 
 
 # 10 mots les plus longs
@@ -53,7 +53,6 @@ for ($i = 0 ; $i < 10 ; $i++)
   {
     @long =(@long, $sortedlength[$i])
   }
-print join(", ", @long), "\n" ;
+print encode("utf8",join(", ", @long)), "\n" ;
 
 close(GRIMM) ;
-

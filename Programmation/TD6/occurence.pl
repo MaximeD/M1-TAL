@@ -12,7 +12,7 @@ my @mots ;
 my %freq ;
 while (my $ligne = <GRIMM>) {
   chomp ($ligne) ;
-  @mots = split (/[ ‒:,'\-;!\?\.]/, $ligne);
+  @mots = split(/\pP|\pS|\s/, $ligne) ;
   foreach my $mot(@mots) {
     $freq{ lc ($mot) }++ ;
   }

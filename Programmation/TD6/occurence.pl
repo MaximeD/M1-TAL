@@ -14,7 +14,9 @@ while (my $ligne = <GRIMM>) {
   chomp ($ligne) ;
   @mots = split(/\pP|\pS|\s/, $ligne) ;
   foreach my $mot(@mots) {
-    $freq{ lc ($mot) }++ ;
+    if ($mot ne ""){
+      $freq{ lc ($mot) }++ ;
+    }
   }
 }
 
@@ -26,7 +28,7 @@ my @sorted = sort { ( $freq{$b} <=> $freq{$a}) or ($a cmp $b) } keys %freq ;
 print encode("utf8", "Les dix mots les plus fréquents et leur nombre d'occurences sont :\n");
 
 my $i ;
-for ($i = 1 ; $i < 11 ; $i++) { # cheating with space which appear first
+for ($i = 0 ; $i < 10 ; $i++) {
   print encode("utf8", "$sorted[$i] \t $freq{$sorted[$i]} \n");
 }
 

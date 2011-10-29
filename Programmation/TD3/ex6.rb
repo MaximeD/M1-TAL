@@ -13,6 +13,3 @@ myPhrase.sort!
 puts "Alphabetically,
 phrase first word is \"" + myPhrase[0] +
 "\" and last word is \"" + myPhrase[-1] + "\""
-
-
-

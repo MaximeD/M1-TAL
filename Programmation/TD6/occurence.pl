@@ -49,7 +49,7 @@ print encode("utf8", join (", ", @once)), "\n" ;
 # 10 mots les plus longs
 print "\nPour finir, les 10 mots les plus longs du fichier sont :\n" ;
 
-my @sortedlength = sort {length $b <=> length $a} @mots;
+my @sortedlength = sort {length $b <=> length $a || $a cmp $b} @mots;
 my @long ;
 for ($i = 0 ; $i < 10 ; $i++)
   {

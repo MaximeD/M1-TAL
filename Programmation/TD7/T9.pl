@@ -2,8 +2,10 @@
 
 use strict ;
 use warnings ;
+use utf8 ;
+use Encode qw(encode decode);
 
-# Simulates the T9 on cellphones
+# Simulates cellphone's T9
 
 my %t9 = (
 	       1 => "",
@@ -11,31 +13,39 @@ my %t9 = (
 	       3 => "[deféèê]",
 	       4 => "[ghi]",
 	       5 => "[jkl]" ,
-	       6 => "[mno]" ,
+	       6 => "[mnoô]" ,
 	       7 => "[pqrs]" ,
 	       8 => "[tuvù]" ,
 	       9 => "[wxyz]"
 	      ) ;
 
-open(LEXIQUE, '<', "lexique.txt") or die ;
+open(LEXIQUE, '<:utf8', "lexique.txt") or die ;
 
-print "Veuillez entrer une séquence de touches\n" ;
+print encode("utf8","Veuillez entrer une séquence de touches\n") ;
 chomp(my $touches = <STDIN>) ;
-die "Veuillez n'entrer que des chiffres" if $touches =~ /\D/ ;
+die encode("utf8","Veuillez n'entrer que des chiffres") if $touches =~ /\D/ ;
 
 my @touche = split(//, $touches) ; # isolate digits
 
-my @sequence ;
+# T9 convertion :
+my $sequence ;
 foreach my $i(@touche) {
-  @sequence = (@sequence, $t9{$i}) ;
+  $sequence .= $t9{$i} ;
 }
 
-my $sequence =  join("", @sequence) ;
+chomp(my @possibles = grep(/\b$sequence\b/, <LEXIQUE>)) ;
 
-my @possibles = grep(/^$sequence$/, <LEXIQUE>) ;
-
-print "Les possibilités sont les suivantes :\n";
-print join(", ", @possibles) ;
+if (!@possibles) {
+  print encode("utf8","Aucun mot ne correspond\n") ;
+}
+elsif (@possibles == 1) {
+  print encode("utf8","La seule possibilité trouvée est :\n");
+  print encode("utf8","\"$possibles[0]\"\n") ;
+}
+else {
+  print encode("utf8","Les possibilités sont les suivantes :\n");
+  print encode("utf8","\"" . join("\", \"", @possibles) . "\"\n") ;
+}
 
 close(LEXIQUE) ;
 

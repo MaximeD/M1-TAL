@@ -11,10 +11,10 @@ open(LEXIQUE, '<', "lexique.txt") ;
 print "Veuillez entrer un mot à compléter:\n" ;
 chomp($mot = <STDIN>) ;
 
-if ($mot =~ /\./)
+if ($mot =~ /\./) # Did you at least enter a dot in your word ?
 {
     chomp(@possible = grep(/^$mot$/, <LEXIQUE>)) ;
-    
+
     if (@possible) # check if we have something to return ie. array not empty
     {
 	print "Les possibilités sont les suivantes :\n\"" . join("\", \"", @possible) . "\"\n" ;

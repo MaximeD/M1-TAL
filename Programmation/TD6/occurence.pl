@@ -5,9 +5,7 @@ use strict ;
 use warnings ;
 use utf8 ;
 
-my @mots ;
 my @sorted ;
-my @once ;
 my %freq ;
 
 sub hash($){
@@ -15,7 +13,7 @@ sub hash($){
   while (<$fileHandle>)
     {
       chomp($_);
-      @mots = split(/\pP|\pS|\s/, $_) ;
+      my @mots = split(/\pP|\pS|\s/, $_) ;
       foreach my $mot(@mots) {
 	if ($mot ne ""){
 	  $freq{ lc ($mot) }++ ;
@@ -36,19 +34,19 @@ sub mostFrequent{
 
 sub hapax{
   print encode("utf8", "\nOn ne trouve qu'une seule occurence des mots suivants :\n") ;
-  my @once ;
+  my @hapax ;
   foreach my $key(@sorted) {
     if ($freq{$key} == 1)
       {
-	@once = (@once, $key) ;
+	@hapax = (@hapax, $key) ;
       }
   }
-  print encode("utf8", join (", ", @once)), "\n" ;
+  print encode("utf8", join (", ", @hapax)), "\n" ;
 }
 
 sub longest{
   print "\nLes 10 mots les plus longs du fichier sont :\n" ;
-  my @sortedlength = sort {length $b <=> length $a or $a cmp $b} @mots;
+  my @sortedlength = sort {length $b <=> length $a or ($a cmp $b)} keys(%freq);
   my @long ;
   my $i;
   for ($i = 0 ; $i < 10 ; $i++)

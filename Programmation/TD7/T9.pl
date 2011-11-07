@@ -8,15 +8,15 @@ use Encode qw(encode decode);
 # Simulates cellphone's T9
 
 my %t9 = (
-	       2 => "abcàâç",
-	       3 => "deféèê",
-	       4 => "ghi",
-	       5 => "jkl" ,
-	       6 => "mnoô" ,
-	       7 => "pqrs" ,
-	       8 => "tuvù" ,
-	       9 => "wxyz"
-	      ) ;
+    2 => "abcàâç",
+    3 => "deféèê",
+    4 => "ghi",
+    5 => "jkl" ,
+    6 => "mnoô" ,
+    7 => "pqrs" ,
+    8 => "tuvù" ,
+    9 => "wxyz"
+    ) ;
 
 open(LEXIQUE, '<:utf8', "lexique.txt") or die ;
 

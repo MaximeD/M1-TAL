@@ -7,7 +7,6 @@ binmode(STDOUT, ":utf8");
 use MethodeMots;
 use MethodeSuffixes;
 
-
 ################
 # Core program #
 ################
@@ -17,17 +16,17 @@ use MethodeSuffixes;
 # It's able to recognize~:
 # Allemand, Anglais, Français, Italien et Néerlandais
 
-
-
 print "Bonjour, quel est le nom du fichier à analyser ?\n" ;
 chomp (my $file = <STDIN>) ;
 open(FILE, '<:utf8', $file) ;
 
-MethodeMots::main;
+MethodeMots::poids("FRENCH", "corpus/belle-rose.txt");
+MethodeMots::poids("FILE", $file);
+MethodeMots::answer;
 MethodeSuffixes::main;
 
 print "Combinaison des résultats...\n"; # Is it supposed to take that long ?
 
-print "La langue du texte est :\n"; # Won a free beer
+print "La langue du texte est :\n"; # If this works, you win a free beer
 
 close(FILE) ;

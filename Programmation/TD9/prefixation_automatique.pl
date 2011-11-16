@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use utf8;
-use Encode qw(encode decode);
+binmode(STDOUT, ":utf8");
 
 open(FILE, '<:utf8', "lefff-grace-utf8.txt");
 
@@ -14,13 +14,13 @@ while (<FILE>) {
     if ($adj =~ m/^i[mrn]/) {      # already negative hey ?
       my $positive = $adj ;
       $positive =~ s/^i[mrn]// ;
-      print encode("utf8", "$adj\t-->\t$positive\n");
+      print "$adj\t-->\t$positive\n";
     }
     elsif ($adj =~ m/^[bpm]/) {   # special case
-      print encode("utf8", "$adj\t-->\tim$adj\n") ;
+      print "$adj\t-->\tim$adj\n";
     }
     else {                        # else
-      print encode("utf8", "$adj\t-->\tin$adj\n") ;
+      print "$adj\t-->\tin$adj\n" ;
     }
   }
 }

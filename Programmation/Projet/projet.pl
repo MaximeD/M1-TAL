@@ -22,7 +22,7 @@ open(FILE, '<:utf8', $file) ;
 
 # var depending upon languages :
 my (%file, %french, %english) ;
-my ($total_file, $total_french, $total_english) ;
+my ($total_french, $total_english) ;
 
 my @textes = (
     {                         hash => \%file,    fh => "FILE",    corpus => $file },

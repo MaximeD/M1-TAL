@@ -25,23 +25,23 @@ my (%file, %french, %english) ;
 my ($total_file, $total_french, $total_english) ;
 
 my @textes = (
-    {                         lang => "?",       name => \%file,    fh => "FILE",    corpus => $file },
-    {total => $total_french,  lang => "french",  name => \%french,  fh => "FRENCH",  corpus => "corpus/belle-rose.txt" },
-    {total => $total_english, lang => "english", name => \%english, fh => "ENGLISH", corpus => "corpus/gottfried-en.txt" }
+    {                         hash => \%file,    fh => "FILE",    corpus => $file },
+    {total => $total_french,  hash => \%french,  fh => "FRENCH",  corpus => "corpus/belle-rose.txt" },
+    {total => $total_english, hash => \%english, fh => "ENGLISH", corpus => "corpus/gottfried-en.txt" }
     );
 
 
 my $textes_nbr = scalar(@textes);
 for (my $i=0 ; $i <$textes_nbr ; $i++)
 {
-    print "$textes[$i]{name} \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
-    $textes[$i]{name} = MethodeMots::poids("$textes[$i]{fh}", $textes[$i]{corpus});
+    print "$textes[$i]{hash} \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
+    $textes[$i]{hash} = MethodeMots::poids("$textes[$i]{fh}", $textes[$i]{corpus});
 }
 
 for (my $i=0 ; $i <$textes_nbr ; $i++)
 {
   if (!$textes[$i]{total}) {                                             # there is no total for $file <STDIN>
-    $textes[$i]{total} = MethodeMots::calcul2(\%file, $textes[$i]{name});
+    $textes[$i]{total} = MethodeMots::calcul2(\%file, $textes[$i]{hash});
   }
 }
 

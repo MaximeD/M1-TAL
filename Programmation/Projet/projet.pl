@@ -25,28 +25,28 @@ my (%file, %french, %english) ;
 my @textes = (
     {lang => "?", name => \%file, fh => "FILE", corpus => $file },
     {lang => "french", name => \%french, fh => "FRENCH", corpus => "corpus/belle-rose.txt" },
-    {lang => "english", name => \%english, fh => "ENGLISH", corpus => "corpus/gottfried-en.txt.txt" }
+    {lang => "english", name => \%english, fh => "ENGLISH", corpus => "corpus/gottfried-en.txt" }
     );
 
 
-# my $textes_nbr = scalar(@textes);
-# for (my $i=0 ; $i <$textes_nbr ; $i++)
-# {
-#     print "$textes[$i]{name} \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
-#     $textes[$i]{name} = MethodeMots::poids("$textes[$i]{fh}", $textes[$i]{corpus});
-# }
+my $textes_nbr = scalar(@textes);
+for (my $i=0 ; $i <$textes_nbr ; $i++)
+{
+    print "$textes[$i]{name} \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
+    $textes[$i]{name} = MethodeMots::poids("$textes[$i]{fh}", $textes[$i]{corpus});
+}
 
-# for (my $i=0 ; $i <$textes_nbr ; $i++)
-# {
-#     $total_$textes[$i]{name} = MethodeMots::calcul2(\%file, $textes[$i]{name});
-# }
-
-
+#for (my $i=0 ; $i <$textes_nbr ; $i++)
+#{
+#    $total_$textes[$i]{name} = MethodeMots::calcul2(\%file, $textes[$i]{name});
+#}
 
 
-%french = MethodeMots::poids("FRENCH", "corpus/belle-rose.txt");
-%english = MethodeMots::poids("ENGLISH", "corpus/gottfried-en.txt");
-%file = MethodeMots::poids("FILE", $file);
+
+
+#%french = MethodeMots::poids("FRENCH", "corpus/belle-rose.txt");
+#%english = MethodeMots::poids("ENGLISH", "corpus/gottfried-en.txt");
+#%file = MethodeMots::poids("FILE", $file);
 my $total_french = MethodeMots::calcul2(\%file, \%french);
 my $total_english = MethodeMots::calcul2(\%file, \%english);
 

@@ -22,10 +22,12 @@ open(FILE, '<:utf8', $file) ;
 
 # var depending upon languages :
 my (%file, %french, %english) ;
+my ($total_file, $total_french, $total_english) ;
+
 my @textes = (
-    {lang => "?", name => \%file, fh => "FILE", corpus => $file },
-    {lang => "french", name => \%french, fh => "FRENCH", corpus => "corpus/belle-rose.txt" },
-    {lang => "english", name => \%english, fh => "ENGLISH", corpus => "corpus/gottfried-en.txt" }
+    {                         lang => "?",       name => \%file,    fh => "FILE",    corpus => $file },
+    {total => $total_french,  lang => "french",  name => \%french,  fh => "FRENCH",  corpus => "corpus/belle-rose.txt" },
+    {total => $total_english, lang => "english", name => \%english, fh => "ENGLISH", corpus => "corpus/gottfried-en.txt" }
     );
 
 
@@ -36,19 +38,20 @@ for (my $i=0 ; $i <$textes_nbr ; $i++)
     $textes[$i]{name} = MethodeMots::poids("$textes[$i]{fh}", $textes[$i]{corpus});
 }
 
-#for (my $i=0 ; $i <$textes_nbr ; $i++)
-#{
-#    $total_$textes[$i]{name} = MethodeMots::calcul2(\%file, $textes[$i]{name});
-#}
+for (my $i=0 ; $i <$textes_nbr ; $i++)
+{
+  if (!$textes[$i]{total}) {                                             # there is no total for $file <STDIN>
+    $textes[$i]{total} = MethodeMots::calcul2(\%file, $textes[$i]{name});
+  }
+}
 
 
 
 
 #%french = MethodeMots::poids("FRENCH", "corpus/belle-rose.txt");
-#%english = MethodeMots::poids("ENGLISH", "corpus/gottfried-en.txt");
 #%file = MethodeMots::poids("FILE", $file);
-my $total_french = MethodeMots::calcul2(\%file, \%french);
-my $total_english = MethodeMots::calcul2(\%file, \%english);
+#my $total_french = MethodeMots::calcul2(\%file, \%french);
+#my $total_english = MethodeMots::calcul2(\%file, \%english);
 
 MethodeMots::answer($total_french, $total_english );
 MethodeSuffixes::main;

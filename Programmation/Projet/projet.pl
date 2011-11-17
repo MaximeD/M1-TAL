@@ -40,7 +40,7 @@ for (my $i=0 ; $i <$textes_nbr ; $i++)
 
 for (my $i=0 ; $i <$textes_nbr ; $i++)
 {
-  if (!$textes[$i]{total}) {                                             # there is no total for $file <STDIN>
+  if (exists $textes[$i]{total}) {                                       # there is no total for $file <STDIN>
     $textes[$i]{total} = MethodeMots::calcul2(\%file, $textes[$i]{hash});
   }
 }

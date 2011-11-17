@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 ###########################
-# Match hyperlinks	  #
+# Match hyperlinks        #
 # and the associated text #
 ###########################
 
@@ -22,7 +22,14 @@ while (<FILE>) {
   }
 }
 
+my $length = 0;
 while ( my ($k,$v) = each %links ) {
-    print "$k \t\t--> \t$v\n" if $v !~ /<.+?>/; # not a description ? bye !
+  $length = length($k) if $length < length($k) ;
 }
 
+$length += 1 ;
+
+
+while ( my ($k,$v) = each %links ) {
+   printf "%-${length}s -->  %-s\n", $k, $v if $v !~ /<.+?>/;;
+}

@@ -54,43 +54,23 @@ sub poids {
 }
 
 sub calcul {
-    my %file = %{$_[0]} ;
-    my %french = %{$_[1]} ;
-    
-    my $total_french = 0 ;
-    # compare frequences
-    while(($key,$value) = each(%file)){
-	if (exists $french{$key}) {
-    	    my $result = abs ($value - $french{$key}) ;
-    	    $total_french += $result ;
-    	}
-    	else {
-    	    $total_french += $value ;
-    	}
+  my %hash_corpus = %{$_[1]} ;
+  my $weight = 0 ;
+
+  open(F, '<:utf8', "$_[0]");
+
+  while (<F>) {
+    my @mots = split(/\pP|\pS|\s/, $_); # extract words
+    foreach my $mot(@mots) {
+      if (exists $hash_corpus{"$mot"}){
+	$weight += $hash_corpus{"$mot"} ;
+      }
     }
-    	print $total_french ;
+  }
+  return $weight;
 }
 
-sub calcul2 {
-    my %file = %{$_[0]} ;
-    my %corpus = %{$_[1]} ;
 
-    my $total_corpus = 0 ;
-    # compare frequences
-    while(($key,$value) = each(%file)){
-	if (exists $corpus{$key}) {
-    	    $total_corpus += $corpus{$key} ;
-    	}
-    }
-    	return $total_corpus ;
-}
-
-sub test {
-    my %test = %{$_[0]} ;
-    while( my ($k, $v) = each(%test) ) {
-        print "key: $k, value: $v.\n";
-    }
-}
 
 ############
 # output ! #
@@ -98,15 +78,18 @@ sub test {
 
 sub answer {
     my %results = (
-	french => $_[0],
-	english => $_[1]
-	);
-
-    my @sorted = sort { ( $results{$b} <=> $results{$a}) or ($a cmp $b) } keys %results ;
+		   french => $_[0],
+		   english => $_[1]
+		  );
 
     print "La langue du texte d'après l'analyse des mots est :\n";
-    print $sorted[0] . "\n";
-
+    my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
+    if ($results{$max_weight} !=0) {
+      print "\t" . $max_weight . "\n";
+    }
+    else {
+      print "\tINCONNUE\n";
+    }
 }
 
 

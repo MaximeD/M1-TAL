@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 text = String.new
-File.open('conteGrimm.txt', 'r') { |line| text = line.read}
+File.open('conteGrimm.txt', 'r:UTF-8') { |line| text = line.read}
 words = text.split(/[ \n\.\?'\:,‒;]/)
 
 occurence = Hash.new(0)
@@ -18,5 +18,5 @@ puts once.join(", ")
 
 
 puts "\nAnd last (but not least!), the 10 longest words are :\n"
-long = occurence.keys.sort_by {|w| w.length }.reverse.first(10)
+long = occurence.keys.sort_by {|w| w.length }.reverse.first(10) # God it's properly handling utf8
 puts long.join(", ")

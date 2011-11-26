@@ -18,6 +18,5 @@ puts once.join(", ")
 
 
 puts "\nAnd last (but not least!), the 10 longest words are :\n"
-long = Array.new
-occurence.first(10).sort_by { |k,v| k.length}.reverse.each{ |word,freq| long << word}
+long = occurence.keys.sort_by {|w| w.length }.reverse.first(10)
 puts long.join(", ")

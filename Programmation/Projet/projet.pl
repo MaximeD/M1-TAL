@@ -4,21 +4,26 @@ use warnings;
 use utf8;
 binmode(STDOUT, ":utf8");
 
+use Getopt::Std ;
+my %opts ;
+getopts( "f:", \%opts ) ; # use -f to pass filename as argument
+
 use MethodeMots;
-#use MethodeSuffixes;
+use MethodeSuffixes;
 
-################
-# Core program #
-################
+my $file ;
+if (exists $opts{ "f" }) {                  # if the filename was defined using the -f switch : go on
+  $file = $opts{"f"} ;
+}
+else {                                      # else : prompt the user for the filename
+   print "Bonjour, quel est le nom du fichier à analyser ?\n" ;
+   chomp ($file = <STDIN>) ;
+}
 
-# This program should be able to recognize
-# the langage of the input.
-# It's able to recognize~:
-# Allemand, Anglais, Français, Italien et Néerlandais
 
-print "Bonjour, quel est le nom du fichier à analyser ?\n" ;
-chomp (my $file = "README" ) ; #<STDIN>) ;
-open(FILE, '<:utf8', $file) ;
+# opening the file
+open(FILE, '<:utf8', $file) or die "Impossible d'ouvrir $file\n" ;
+
 
 # var depending upon languages :
 my (%file, %french, %english) ;
@@ -50,7 +55,13 @@ for (my $i=0 ; $i <$textes_nbr ; $i++)
 
 MethodeMots::answer($textes[1]{total},$textes[2]{total});
 
-
+for (my $i=0 ; $i <$textes_nbr ; $i++)
+{
+  if (exists $textes[$i]{total}) { 
+   print "$textes[$i]{hash}  \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
+    %{$textes[$i]{hash}} = MethodeSuffixes::poids($textes[$i]{fh}, $textes[$i]{corpus})
+  };
+}
 
 
 #%french = MethodeMots::poids("FRENCH", "corpus/belle-rose.txt");

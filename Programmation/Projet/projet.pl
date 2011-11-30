@@ -6,10 +6,60 @@ binmode(STDOUT, ":utf8");
 
 use Getopt::Std ;
 my %opts ;
-getopts( "f:", \%opts ) ; # use -f to pass filename as argument
+getopts( "f:i", \%opts ) ; # use -f to pass filename as argument
 
+use Calcul;
 use MethodeMots;
 use MethodeSuffixes;
+use Answer ;
+
+################
+# Core program #
+################
+
+# This program should be able to recognize
+# the langage of the input.
+# It's able to recognize~:
+# Allemand, Anglais, Français, Italien et Néerlandais
+
+
+my @textes = (
+    {total => my $total_french,  fh => "FRENCH",  corpus => "corpus/french.txt"  },
+    {total => my $total_english, fh => "ENGLISH", corpus => "corpus/english.txt" },
+    {total => my $total_german,  fh => "GERMAN",  corpus => "corpus/german.txt"  },
+    {total => my $total_italian, fh => "ITALIAN", corpus => "corpus/italian.txt" },
+    {total => my $total_dutch,   fh => "DUTCH",   corpus => "corpus/dutch.txt"   },
+    );
+
+my $textes_nbr = scalar(@textes);
+
+# If -i is called,
+# then overwrite existing frequencies
+# else, check if there are missing frequency files
+my $reinitialize = 0 ;
+if ($opts{"i"}) {
+    for (my $i=0 ; $i <$textes_nbr ; $i++)
+    {
+	print "Calcul des fréquences de $textes[$i]{corpus}\n";
+	Calcul::freq($textes[$i]{fh}, $textes[$i]{corpus});
+    }
+    $reinitialize = 1 ;
+}
+
+
+for (my $i=0 ; $i <$textes_nbr ; $i++) {
+    my $path = "frequencies/" . lc ($textes[$i]{fh} . "_freq") ;
+    unless (-e $path)
+    {
+	print "Le fichier $path n'a pas été trouvé !\n\tCalcul des fréquences de $textes[$i]{corpus}...\n";
+	Calcul::freq($textes[$i]{fh}, $textes[$i]{corpus});
+	$reinitialize = 1 ;
+    }
+}
+
+print "Les fréquences ont été calculées, vous pouvez relancer le programme\n" and exit if $reinitialize == 1 ;
+
+
 
 my $file ;
 if (exists $opts{ "f" }) {                  # if the filename was defined using the -f switch : go on
@@ -20,57 +70,26 @@ else {                                      # else : prompt the user for the fil
    chomp ($file = <STDIN>) ;
 }
 
-
-# opening the file
-open(FILE, '<:utf8', $file) or die "Impossible d'ouvrir $file\n" ;
+open(FILE, '<:utf8', $file) ;
 
 
-# var depending upon languages :
-my (%file, %french, %english) ;
-my ($total_french, $total_english) ;
-
-my @textes = (
-    {                         hash => \%file,    fh => "FILE",    corpus => $file },
-    {total => $total_french,  hash => \%french,  fh => "FRENCH",  corpus => "corpus/belle-rose.txt" },
-    {total => $total_english, hash => \%english, fh => "ENGLISH", corpus => "corpus/en.txt" }
-    );
-
-
-my $textes_nbr = scalar(@textes);
+my %totaux_mots ;
 for (my $i=0 ; $i <$textes_nbr ; $i++)
 {
-  if (exists $textes[$i]{total}) { 
-   print "$textes[$i]{hash}  \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
-    %{$textes[$i]{hash}} = MethodeMots::poids($textes[$i]{fh}, $textes[$i]{corpus})
-  };
+    $totaux_mots{ "$textes[$i]{fh}" } = MethodeMots::calcul($file, $textes[$i]{fh}) ;
 }
 
+Answer::method_result("mots",\%totaux_mots);
+
+
+my %totaux_suffixes ;
 for (my $i=0 ; $i <$textes_nbr ; $i++)
 {
-  if (exists $textes[$i]{total}) {                                       # there is no total for $file <STDIN>
-    $textes[$i]{total} = MethodeMots::calcul($textes[0]{corpus}, $textes[$i]{hash});
-  }
+    $totaux_suffixes{ "$textes[$i]{fh}" } = MethodeSuffixes::calcul($file, $textes[$i]{fh},4);
 }
 
+Answer::method_result("suffixes",\%totaux_suffixes);
 
-MethodeMots::answer($textes[1]{total},$textes[2]{total});
-
-for (my $i=0 ; $i <$textes_nbr ; $i++)
-{
-  if (exists $textes[$i]{total}) { 
-   print "$textes[$i]{hash}  \t $textes[$i]{fh} \t $textes[$i]{corpus}\n";
-    %{$textes[$i]{hash}} = MethodeSuffixes::poids($textes[$i]{fh}, $textes[$i]{corpus})
-  };
-}
-
-
-#%french = MethodeMots::poids("FRENCH", "corpus/belle-rose.txt");
-#%file = MethodeMots::poids("FILE", $file);
-#my $total_french = MethodeMots::calcul2(\%file, \%french);
-#my $total_english = MethodeMots::calcul2(\%file, \%english);
-
-#MethodeMots::answer($total_french, $total_english );
-#MethodeSuffixes::main;
 
 print "Combinaison des résultats...\n"; # Is it supposed to take that long ?
 

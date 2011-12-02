@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use utf8;
 binmode(STDOUT, ":utf8");
+binmode(STDIN, ":utf8");
 
 use Getopt::Std ;
 my %opts ;
@@ -12,6 +13,7 @@ use Calcul;
 use MethodeMots;
 use MethodeSuffixes;
 use Answer ;
+use MethodeVector ;
 
 ################
 # Core program #
@@ -93,6 +95,12 @@ Answer::method_result("suffixes",\%totaux_suffixes);
 
 print "Combinaison des résultats...\n"; # Is it supposed to take that long ?
 
-print "La langue du texte est :\n"; # If this works, you win a free beer
+Answer::compare(\%totaux_mots,\%totaux_suffixes);
+
+print "\n##################################\n";
+print "\tANALYSE VECTORIELLE\n" ; 
+MethodeVector::mots($file,\@textes);
+MethodeVector::suffixes($file,\@textes,4);
+
 
 close(FILE) ;

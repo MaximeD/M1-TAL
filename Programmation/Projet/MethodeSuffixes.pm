@@ -1,7 +1,11 @@
 package MethodeSuffixes;
 
+use warnings ;
+use strict ;
+
 use utf8;
 binmode(STDOUT, ":utf8");
+binmode(STDIN, ":utf8");
 
 sub calcul {
   my %hash_corpus ;
@@ -27,7 +31,7 @@ sub calcul {
     my @mots = split(/\pP|\pS|\s/, $_); # extract words
     foreach my $mot(@mots) {
       $mot =~ /(?<terminaison>.{$n}$)/;
-      if (exists $hash_corpus{ "$+{terminaison}" }){
+      if (defined $+{terminaison} && exists $hash_corpus{"$+{terminaison}"} ){
 	$weight += $hash_corpus{"$+{terminaison}"} ;
       }
     }

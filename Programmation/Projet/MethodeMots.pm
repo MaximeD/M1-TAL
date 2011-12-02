@@ -1,7 +1,13 @@
 package MethodeMots;
 
+use warnings ;
+use strict ;
+
+use Calcul;
+
 use utf8;
 binmode(STDOUT, ":utf8");
+binmode(STDIN, ":utf8");
 
 sub calcul {
   my %hash_corpus ;
@@ -29,5 +35,6 @@ sub calcul {
   close(F);
   return $weight;
 }
+
 
 1; # a perl module must return true value

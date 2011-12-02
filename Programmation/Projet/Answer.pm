@@ -54,4 +54,48 @@ sub compare {
 
 }
 
+sub vector{
+  my %txt = %{ $_[0] } ;
+  my $count_words = $_[1];
+  my @freq_corpus = @{ $_[2] } ;
+  my @textes = @{ $_[3] } ;
+
+  # sorting hash
+  my @sorted = sort { ( $txt{$b} <=> $txt{$a}) or ($a cmp $b) } keys %txt ;
+
+  # most frequent :
+  my %hash;
+  for (my $i = 0; $i < 10 ; $i++) {
+    $hash{$sorted[$i]} = $txt{$sorted[$i]}/$count_words*100 ;
+  }
+
+  #dot product
+  my %results ;
+  for (my $i= 0 ; $i < @freq_corpus ; $i++) {
+    my ($numerateur, $norme_corpus, $norme_txt, $denominateur, $cos) ;
+
+    while ( my ($k,$v) = each %{ $freq_corpus[$i] }) {
+      $numerateur += $v * $hash{$k} if (exists $hash{$k} ) ;
+      $norme_corpus += $v ** 2 ;
+      $norme_txt += $hash{$k} ** 2 if (exists $hash{$k} ) ;
+    }
+
+    if (defined $norme_txt){
+      $denominateur = ($norme_corpus ** (1/2)) * ($norme_txt ** (1/2)) ;
+      $cos = $numerateur / $denominateur ;
+      $results{$textes[$i]{fh}} = $cos * 100;
+    }
+    else {
+      $results{$textes[$i]{fh}} = 0;
+    }
+  }
+
+  my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
+
+  # give answer
+  print "La langue du texte d'après l'analyse vectorielle des " . $_[4]. " est :\n" ;
+  printf "\t" . lc($max_weight) . " (%.2f%%)\n", $results{ $max_weight } ;
+
+}
+
 1; # a perl module must return true value

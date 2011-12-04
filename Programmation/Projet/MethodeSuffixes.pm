@@ -16,27 +16,33 @@ sub calcul {
   my $weight = 0 ;
 
 
-  for (my $n = 1 ; $n < $_[2] ; $n++) {
+#  for (my $n = 1 ; $n <= $_[2] ; $n++) {
 
   while (<FREQ>) {
-      $_ =~ /
-	      (:?(:?\S+)\t(:?\S+))  # not match
-	      (:?\t(?<gramm>\S+)\t(?<freq>\S+)){$n}
-	    /gx ;
-      $hash_corpus{ $+{gramm} } = $+{freq};
+      # We get the first good match
+     $_ =~ /
+	   (:?\S+\t\S+)               # not match
+	   (:?\t(?<gramm>\S+)\t(?<freq>\S+))
+	   /gx  ;
+     $hash_corpus{ $+{gramm} } = $+{freq};
+     # and now everything that follows
+     while ($_ =~ /(:?\t(?<gramm>\S+)\t(?<freq>\S+))/g){
+	 $hash_corpus{ $+{gramm} } = $+{freq};
+     }
   }
-
-
+ 
   while (<F>) {
     my @mots = split(/\pP|\pS|\s/, $_); # extract words
     foreach my $mot(@mots) {
-      $mot =~ /(?<terminaison>.{$n}$)/;
-      if (defined $+{terminaison} && exists $hash_corpus{"$+{terminaison}"} ){
-	$weight += $hash_corpus{"$+{terminaison}"} ;
-      }
+	for (my $n = 1 ; $n <= $_[2] ; $n++) {
+	    $mot =~ /(?<terminaison>.{$n}$)/;
+	    if (defined $+{terminaison} && exists $hash_corpus{"$+{terminaison}"} ){
+		$weight += $hash_corpus{"$+{terminaison}"} ;
+	    }
+	}
     }
   }
-  }
+  
 
   close(FREQ);
   close(F);

@@ -75,27 +75,27 @@ else {                                      # else : prompt the user for the fil
 open(FILE, '<:utf8', $file) ;
 
 
-my %totaux_mots ;
-for (my $i=0 ; $i <$textes_nbr ; $i++)
-{
-    $totaux_mots{ "$textes[$i]{fh}" } = MethodeMots::calcul($file, $textes[$i]{fh}) ;
-}
+# my %totaux_mots ;
+# for (my $i=0 ; $i <$textes_nbr ; $i++)
+# {
+#     $totaux_mots{ "$textes[$i]{fh}" } = MethodeMots::calcul($file, $textes[$i]{fh}) ;
+# }
 
-Answer::method_result("mots",\%totaux_mots);
-
-
-my %totaux_suffixes ;
-for (my $i=0 ; $i <$textes_nbr ; $i++)
-{
-    $totaux_suffixes{ "$textes[$i]{fh}" } = MethodeSuffixes::calcul($file, $textes[$i]{fh},4);
-}
-
-Answer::method_result("suffixes",\%totaux_suffixes);
+# Answer::method_result("mots",\%totaux_mots);
 
 
-print "Combinaison des résultats...\n"; # Is it supposed to take that long ?
+# my %totaux_suffixes ;
+# for (my $i=0 ; $i <$textes_nbr ; $i++)
+# {
+#     $totaux_suffixes{ "$textes[$i]{fh}" } = MethodeSuffixes::calcul($file, $textes[$i]{fh},4);
+# }
 
-Answer::compare(\%totaux_mots,\%totaux_suffixes);
+# Answer::method_result("suffixes",\%totaux_suffixes);
+
+
+# print "Combinaison des résultats...\n"; # Is it supposed to take that long ?
+
+# Answer::compare(\%totaux_mots,\%totaux_suffixes);
 
 print "\n##################################\n";
 print "\tANALYSE VECTORIELLE\n" ; 

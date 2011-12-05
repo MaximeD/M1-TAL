@@ -7,25 +7,27 @@ use utf8;
 binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 
+
 sub suffix_weight {
-    my $n = $_[2] ; # How many gramms are we looking for ?
+    my $gramm_number = $_[2] ; # How many gramms are we looking for ?
     my $k = $_[3] ;
     my %gramm ;
     my $count = 0;
 
     my $fileHandle = $_[0];
 
-    open($_[0], '<:utf8', $_[1]);
-    while (<$fileHandle>) {
+    open(CORPUS, '<:utf8', $_[1]);
+    while (<CORPUS>) {
       for my $word(split(/\pP|\pS|\s/, $_)){
-	$gramm{$+{last}}++ and $count++ if $word =~ (/(?<last>.{$n}$)/) ;
+	  my $tail = substr $word, -$gramm_number ;
+	  $gramm{$tail}++ and $count++ if (length($tail) == $gramm_number);
       }
     }
 
     # sorting hash by descending value
     my @sorted = sort { ( $gramm{$b} <=> $gramm{$a}) or ($a cmp $b) } keys %gramm ;
 
-    close($fileHandle);
+    close(CORPUS);
 
     return ($sorted[$k], $gramm{$sorted[$k]} / $count * 100)  ;
 }
@@ -38,11 +40,12 @@ sub freq {
   my $count_words = 0 ;                   # total words in file / reinitialize
   my $corpus = $_[1];
 
-  open($_[0], '<:utf8', $corpus);
-
   my $fileHandle = $_[0];                 # a way to pass a filehandle as an argument
 
-  while (<$fileHandle>) {
+  open(CORPUS, '<:utf8', $corpus);
+
+
+  while (<CORPUS>) {
     chomp($_);                          # rm newlines
     my @mots = split(/\pP|\pS|\s/, $_); # extract words
     foreach my $mot(@mots) {
@@ -60,7 +63,7 @@ sub freq {
   my %hash;
 
   my $output = "frequencies/" . lc ($_[0] . "_FREQ");
-  open($output, '>:utf8', $output);
+  open(OUTPUT, '>:utf8', $output);
 
 
 for (my $i = 0; $i < 10 ; $i++) {
@@ -70,10 +73,10 @@ for (my $i = 0; $i < 10 ; $i++) {
 	my @gramm_n = &suffix_weight($fileHandle,$corpus,$j,$i) ;
 	@gramm = (@gramm, @gramm_n);	
     }
-    print $output $sorted[$i] . "\t" . $freq{$sorted[$i]}/$count_words*100 . "\t" . join("\t", @gramm) . "\n";
+    print OUTPUT $sorted[$i] . "\t" . $freq{$sorted[$i]}/$count_words*100 . "\t" . join("\t", @gramm) . "\n";
 }
-  close($fileHandle);
-  close($output);
+  close(CORPUS);
+  close(OUTPUT);
 }
 
 sub freq_txt {

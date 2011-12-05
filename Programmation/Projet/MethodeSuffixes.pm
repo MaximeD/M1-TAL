@@ -16,8 +16,6 @@ sub calcul {
   my $weight = 0 ;
 
 
-#  for (my $n = 1 ; $n <= $_[2] ; $n++) {
-
   while (<FREQ>) {
       # We get the first good match
      $_ =~ /
@@ -32,17 +30,15 @@ sub calcul {
   }
  
   while (<F>) {
-    my @mots = split(/\pP|\pS|\s/, $_); # extract words
-    foreach my $mot(@mots) {
+    my @words = split(/\pP|\pS|\s/, $_); # extract words
+    foreach my $word(@words) {
 	for (my $n = 1 ; $n <= $_[2] ; $n++) {
-	    $mot =~ /(?<terminaison>.{$n}$)/;
-	    if (defined $+{terminaison} && exists $hash_corpus{"$+{terminaison}"} ){
-		$weight += $hash_corpus{"$+{terminaison}"} ;
-	    }
+	    my $tail = substr $word, -$n ;
+	    $weight += $hash_corpus{$tail} if (length($tail) == $n && exists $hash_corpus{$tail});
 	}
     }
   }
-  
+ 
 
   close(FREQ);
   close(F);

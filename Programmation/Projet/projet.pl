@@ -35,6 +35,8 @@ my @textes = (
 
 my $textes_nbr = scalar(@textes);
 
+my $gramm_number = 4 ;
+
 # If -i is called,
 # then overwrite existing frequencies
 # else, check if there are missing frequency files
@@ -61,6 +63,9 @@ for (my $i=0 ; $i <$textes_nbr ; $i++) {
 
 print "Les fréquences ont été calculées, vous pouvez relancer le programme\n" and exit if $reinitialize == 1 ;
 
+####################################
+# Comparison with file starts here #
+####################################
 
 
 my $file ;
@@ -92,8 +97,6 @@ open(FILE, '<:utf8', $file) ;
 
 # Answer::method_result("suffixes",\%totaux_suffixes);
 
-
-# print "Combinaison des résultats...\n"; # Is it supposed to take that long ?
 
 # Answer::compare(\%totaux_mots,\%totaux_suffixes);
 

@@ -5,6 +5,7 @@ use strict ;
 
 use utf8;
 binmode(STDOUT, ":utf8");
+binmode(STDIN, ":utf8");
 
 sub method_result {
     my %results = %{ $_[1] } ;
@@ -37,19 +38,25 @@ sub compare {
 	$total_weight_suffixes += $results_suffixes{ $k } ;
     }
 
-    while ( my ($k,$v) = each %results_mots ) {
-	$results{ $k } = ($results_mots{ $k } / $total_weight_mot) * 100 + ($results_suffixes{ $k } / $total_weight_suffixes) * 100 ;
-	$total_weight += $results{ $k } ;
+    unless ($total_weight_mot == 0 or $total_weight_suffixes == 0) {
+	print "\nCombinaison des résultats...\n" ;
+	while ( my ($k,$v) = each %results_mots ) {
+	    $results{ $k } = ($results_mots{ $k } / $total_weight_mot) * 100 + ($results_suffixes{ $k } / $total_weight_suffixes) * 100 ;
+	    $total_weight += $results{ $k } ;
+	}
+	
+	print "La langue du texte après combinaison est :\n";
+	my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
+	if ($results{$max_weight} !=0) {
+	    print "\t" . lc($max_weight) ;
+	    printf(" (%.2f%%)\n", ($results{$max_weight} / $total_weight) * 100);
+	}
+	else {
+	    print "\tINCONNUE\n";
+	}
     }
-    
-    print "La langue du texte après combinaison est :\n";
-    my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
-    if ($results{$max_weight} !=0) {
-	print "\t" . lc($max_weight) ;
-	printf(" (%.2f%%)\n", ($results{$max_weight} / $total_weight) * 100);
-    }
-    else {
-      print "\tINCONNUE\n";
+    else{
+	print "Les résultats ne peuvent pas être combinés\n";	
     }
 
 }

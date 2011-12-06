@@ -9,8 +9,7 @@ binmode(STDIN, ":utf8");
 
 # compares frequencies, prints highest
 sub method_result {
-    # hash of word / suffix weights
-    my %results = %{ $_[1] } ;
+    my %results = %{ $_[1] } ; # hash of word / suffix weights
 
     # var to get the percentages
     my $total_weight ;
@@ -37,11 +36,8 @@ sub method_result {
 
 # compares the results of words and suffixes
 sub compare {
-    # values for words
-    my %results_mots = %{ $_[0] } ;
-    
-    # values for suffixes
-    my %results_suffixes = %{ $_[1] };
+    my %results_mots = %{ $_[0] } ;      # values for words
+    my %results_suffixes = %{ $_[1] };   # values for suffixes
     
     my %results ;
     my ($total_weight, $total_weight_mot, $total_weight_suffixes);
@@ -76,18 +72,10 @@ sub compare {
 
 # compares vectors of words
 sub vector{
-	
-  # hash of frequencies of words from file
-  my %txt = %{ $_[0] } ;
-  
-  # total words in file
-  my $count_words = $_[1];
-  
-  # list of vectorial values for the corpus
-  my @freq_corpus = @{ $_[2] } ;
-  
-  # list of vectorial values for the file
-  my @textes = @{ $_[3] } ;
+  my %txt = %{ $_[0] } ;              # hash of frequencies of words from file
+  my $count_words = $_[1] ;           # total words in file
+  my @freq_corpus = @{ $_[2] } ;      # list of vectorial values for the corpus
+  my @textes = @{ $_[3] } ;           # list of vectorial values for the file
 
   # sorts frequencies for file words
   my @sorted = sort { ( $txt{$b} <=> $txt{$a}) or ($a cmp $b) } keys %txt ;
@@ -128,4 +116,4 @@ sub vector{
 
 }
 
-1; # a perl module must return true value
+1; # a perl module must return a true value

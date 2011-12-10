@@ -36,23 +36,23 @@ sub method_result {
 
 # compares the results of words and suffixes
 sub compare {
-    my %results_mots = %{ $_[0] } ;      # values for words
+    my %results_words = %{ $_[0] } ;      # values for words
     my %results_suffixes = %{ $_[1] };   # values for suffixes
     
     my %results ;
-    my ($total_weight, $total_weight_mot, $total_weight_suffixes);
+    my ($total_weight, $total_weight_word, $total_weight_suffixes);
 
     # vars to get the percentages
-    while ( my ($k,$v) = each %results_mots ) {
-	$total_weight_mot += $v ;
+    while ( my ($k,$v) = each %results_words ) {
+	$total_weight_word += $v ;
 	$total_weight_suffixes += $results_suffixes{ $k } ;
     }
     
     # merges results  if the values are valid
-    unless ($total_weight_mot == 0 or $total_weight_suffixes == 0) {
+    unless ($total_weight_word == 0 or $total_weight_suffixes == 0) {
 	print "\nCombinaison des résultats...\n" ;
-	while ( my ($k,$v) = each %results_mots ) {
-	    $results{ $k } = (($results_mots{ $k } / $total_weight_mot) + ($results_suffixes{ $k } / $total_weight_suffixes)) * 100 ;
+	while ( my ($k,$v) = each %results_words ) {
+	    $results{ $k } = (($results_words{ $k } / $total_weight_word) + ($results_suffixes{ $k } / $total_weight_suffixes)) * 100 ;
 	    $total_weight += $results{ $k } ;
 	}
 	
@@ -70,50 +70,5 @@ sub compare {
 
 }
 
-# compares vectors of words
-sub vector{
-  my %txt = %{ $_[0] } ;              # hash of frequencies of words from file
-  my $count_words = $_[1] ;           # total words in file
-  my @freq_corpus = @{ $_[2] } ;      # list of vectorial values for the corpus
-  my @textes = @{ $_[3] } ;           # list of vectorial values for the file
-
-  # sorts frequencies for file words
-  my @sorted = sort { ( $txt{$b} <=> $txt{$a}) or ($a cmp $b) } keys %txt ;
-
-  # gets the n most frequent
-  my %hash;
-  for (my $i = 0; $i < 10 ; $i++) {
-    $hash{$sorted[$i]} = $txt{$sorted[$i]}/$count_words*100 ;
-  }
-
-  # does the dot product (see the pdf file for detailed explanations)
-  my %results ;
-  for (my $i= 0 ; $i < @freq_corpus ; $i++) {
-    my ($numerateur, $norme_corpus, $norme_txt, $denominateur, $cos) ;
-
-    while ( my ($k,$v) = each %{ $freq_corpus[$i] }) {
-      $numerateur += $v * $hash{$k} if (exists $hash{$k} ) ;
-      $norme_corpus += $v ** 2 ;
-      $norme_txt += $hash{$k} ** 2 if (exists $hash{$k} ) ;
-    }
-
-    if (defined $norme_txt){
-      $denominateur = ($norme_corpus ** (1/2)) * ($norme_txt ** (1/2)) ;
-      $cos = $numerateur / $denominateur ;
-      $results{$textes[$i]{fh}} = $cos * 100;
-    }
-    else {
-      $results{$textes[$i]{fh}} = 0;
-    }
-  }
-
-  # gets the highest
-  my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
-
-  # prints answer
-  print "La langue du texte d'après l'analyse vectorielle des " . $_[4]. " est :\n" ;
-  printf "\t" . lc($max_weight) . " (%.2f%%)\n", $results{ $max_weight } ;
-
-}
 
 1; # a perl module must return a true value

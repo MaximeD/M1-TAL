@@ -22,10 +22,10 @@ sub words {
 
   # if a word in file has a weight in the corpus, adds it
   while (<F>) {
-    my @mots = split(/\pP|\pS|\s/, $_); # extract words
-    foreach my $mot(@mots) {
-      if (exists $hash_corpus{"$mot"}){
-	$weight += $hash_corpus{"$mot"} ;
+    my @words = split(/\pP|\pS|\s/, $_); # extract words
+    for my $word(@words) {
+      if (exists $hash_corpus{"$word"}){
+	$weight += $hash_corpus{"$word"} ;
       }
     }
   }
@@ -46,8 +46,8 @@ sub suffixes {
   # if a suffix in file has a weight in the corpus, adds it
   while (<F>) {
     my @words = split(/\pP|\pS|\s/, $_); # extract words
-    foreach my $word(@words) {
-	for (my $n = 1 ; $n <= $_[2] ; $n++) {
+    for my $word(@words) {
+	for (my $n = 1 ; $n <= $main::gramm_number ; $n++) {
 	    my $tail = substr $word, -$n ;
 	    $weight += $hash_corpus{$tail} if (length($tail) == $n && exists $hash_corpus{$tail}); # avoid extra matches when word is shorter than gramm
 	}

@@ -1,9 +1,91 @@
-BEWARE
-This actually under heavy developpement !
+LANGUAGE FINDER v1.0
+----------------------------------------------------------------
 
-It is not suitable, usable, or even interesting.
+This perl software will recognize the original language
+of a source file given by the user.
+At the moment, it is able to recognize the following languages:
+czech  english    finnish  german  italian     spanish
+dutch  esperanto  french   greek   portuguese  swedish
 
-If you still wish to try it home,
-notice it may destroy your computer,
-burn your house,
-and even kill Kenny.
+You can easily add a language by adding a corpus file
+in the "corpus/" directory,
+and the name of the language in the core program "language_finder.pl",
+at line 44.
+
+The program applies two different methods
+based on words and suffixes comparison
+(a standard one and a vectorial one).
+
+
+HOW TO USE
+----------------------------------------------------------------
+
+This program is very easy to use !
+Just start it.
+
+If you want more advanced controls,
+you can pass the following arguments:
+-f <input text> : the name of the text you want to analyze
+-l <integer>    : the number of occurences to process
+-g <integer>    : the highest suffix length to process
+-i              : reinitializes the corpus (debug)
+
+
+AUTHORS
+----------------------------------------------------------------
+
+DEMOLIN Maxime <maxime.demolin@etu.unistra.fr>
+and
+TALEB Chafik   <chafik.taleb@etu.unistra.fr>
+
+
+THANKS
+----------------------------------------------------------------
+
+We would like to thank Ms. Bernhard for her precious advice
+on how to program in perl, all well as the teaching staff
+at Université de Strasbourg.
+We would also like to thank our families and friends,
+especially Mihai Dumitriu,
+for the moral support they showed us
+during the development of the project.
+
+
+INSTALL
+----------------------------------------------------------------
+
+On UNIX:
+Unpack the archive in any folder with execution rights.
+Make the program executable (chmod +x language_finder.pl)
+Launch it (./language_finder.pl)
+
+On Windows:
+NOT SUPPORTED
+(we did not test it under windows and we did not intended to try)
+(in fact we don't care)
+
+On Mac/OS:
+Mac/OS IS Unix, just more expensive,
+so it should work the same.
+
+
+COPYING / LICENSE
+----------------------------------------------------------------
+
+Licensed under the GPL license.
+See http://www.gnu.org/licenses/gpl.html
+
+
+BUGS AND LIMITATIONS
+----------------------------------------------------------------
+
+If you find bugs, please contact us.
+
+At the moment,
+the program is unable to use more than one text of reference
+per language.
+
+The percentages given by the standard method heavily depends
+on the number of languages.
+The more languages there are,
+the lower the percentages will be.

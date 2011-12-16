@@ -52,48 +52,6 @@ sub dot_product {
     return (lc($max_weight), $results{ $max_weight }) ;
 }
 
-# acquires frequencies computed by Calcul module
-sub txt2hash{
-  my $corpus = $_[0] ;
-  my %freq;
-
-  open(TXT, '<:utf8', $corpus) ;
-  while (<TXT>){
-    $_ =~ /(?<mot>\S+)\t(?<freq>\S+)\t/ ;
-    $freq{ $+{mot} } = $+{freq};
-  }
-  close(TXT) ;
-
-  return \%freq ;
-}
-
-# computes suffixes weight for each language
-sub txt2hash_suffix {
-  my $corpus = $_[0] ;
-  my %freq;
-  my %hash_corpus ;
-
-  open(FREQ, '<:utf8', $corpus);
-
-  while (<FREQ>) {
-      # We get the first good match
-      $_ =~ /
-	  (:?\S+\t\S+)               # not match
-	  (:?\t(?<gramm>\S+)\t(?<freq>\S+))
-	/gx  ;
-      $hash_corpus{ $+{gramm} } = $+{freq};
-      # and now everything that follows
-      while ($_ =~ /(:?\t(?<gramm>\S+)\t(?<freq>\S+))/g){
-	  $hash_corpus{ $+{gramm} } = $+{freq};
-      }
-  }
-
-  close(FREQ);
-
-  return \%hash_corpus ;
-}
-
-
 # computes vectors for words
 sub words {
   my @textes = @{ $_[1] } ;
@@ -129,8 +87,8 @@ sub words {
 
   # gets the n most frequent
   my %hash;
-  for (my $i = 0; $i < 10 ; $i++) {
-    $hash{$sorted[$i]} = $txt{$sorted[$i]}/$count_words*100 ;
+  for (my $i = 0; $i < $main::max_num ; $i++) {
+    $hash{$sorted[$i]} = $txt{$sorted[$i]}/$count_words*100 if (exists $sorted[$i]);
   }
 
 
@@ -139,8 +97,8 @@ sub words {
   ($max_weight, $max_weight_value) = &dot_product(\@freq_corpus, \%txt, $_[1]);
 
   # gives answer
-  print "La langue du texte d'après l'analyse vectorielle des mots est :\n" ;
-  printf "\t" . $max_weight . " (%.2f%%)\n", $max_weight_value ; #$results{ $max_weight } ;
+  print "According to the word analysis, the file is in...\n" ;
+  printf "\t" . $max_weight . " (%.2f%%)\n" , $max_weight_value ;
 
 }
 
@@ -162,19 +120,18 @@ sub get_gramms {
       
     my @sorted ;
     @sorted = sort { ( $gramm{$b} <=> $gramm{$a}) or ($a cmp $b) } keys %gramm ;
-    for (my $i = 0; $i < 10 ; $i++) {
-	$txt{$sorted[$i]} = $gramm{$sorted[$i]}/$count*100 ;
+    for (my $i = 0; $i < $main::max_num ; $i++) {
+	$txt{$sorted[$i]} = $gramm{$sorted[$i]}/$count*100 if (exists $sorted[$i]);
     }
     close(TXT);
     return \%txt ;
   }
 
 
-# computes vectors for words
+# computes vectors for suffixes
 sub suffixes {
   my $fileHandle = $_[0] ;
   my @textes = @{ $_[1] } ;
-  my $n = $_[2] + 1 ;
   my $textes_nbr = scalar(@textes) ;
   my %txt ;
   my @freq_corpus ;
@@ -182,11 +139,11 @@ sub suffixes {
   # acquires suffixes from corpus frequency file
   for (my $i=0 ; $i <$textes_nbr ; $i++)
     {
-      $freq_corpus[$i] = Calcul::txt2hash_suffix($textes[$i]{frequencies},$n) ;
+      $freq_corpus[$i] = Calcul::txt2hash_suffix($textes[$i]{frequencies}) ;
     }
 
   # computes suffixes for text
-  for (my $i = 1 ; $i < 5 ; $i++ ) {
+  for (my $i = 1 ; $i <= $main::gramm_number ; $i++ ) {
       my %gramm ;
       %gramm  = %{ &get_gramms($fileHandle,$i) } ;
       while (my($k,$v) = each %gramm){
@@ -198,8 +155,8 @@ sub suffixes {
   ($max_weight, $max_weight_value) = &dot_product(\@freq_corpus, \%txt, $_[1]);
 
   # gives answer
-  print "La langue du texte d'après l'analyse vectorielle des suffixes est :\n" ;
-  printf "\t" . $max_weight . " (%.2f%%)\n", $max_weight_value ; #$results{ $max_weight } ;
+  print "According to the suffix analysis, the file is in...\n" ;
+  printf "\t" . $max_weight . " (%.2f%%)\n", $max_weight_value ;
 
 }
 

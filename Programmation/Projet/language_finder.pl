@@ -9,7 +9,7 @@ binmode(STDIN, ":utf8");
 use Getopt::Std ;
 my %opts ;
 # accept the following args :
-getopts( "f:in:", \%opts ) ;
+getopts( "f:ig:l:", \%opts ) ;
 
 # needed modules
 use Calcul;
@@ -23,16 +23,37 @@ use Answer ;
 
 # global vars
 # how many gramms we are looking for
-our $gramm_number = 4 ; # if you want to change it, do it here
-our $max_num = 50 ;
+our ($gramm_number, $max_num) ;
+
+if ($opts{"g"}) {
+    $gramm_number = $opts{"g"}
+}
+else {
+    $gramm_number = 4 ;
+}
+
+if ($opts{"l"}) {
+    $max_num = $opts{"l"}
+}
+else {
+    $max_num = 100 ;
+}
+
 
 # list of languages
 my @texts = (
-    {language => "french"},
+    {language => "czech"},
+    {language => "dutch"},
     {language => "english"},
+    {language => "esperanto"},
+    {language => "finnish"},
+    {language => "french"},
+    {language => "greek"},
     {language => "german"},
     {language => "italian"},
-    {language => "dutch"}
+    {language => "portuguese"},
+    {language => "spanish"},
+    {language => "swedish"},
     );
 
 # get the number of texts
@@ -44,20 +65,39 @@ for (my $i = 0 ; $i < $texts_nbr ; $i++){
 	$texts[$i]{frequencies} = "frequencies/" . $texts[$i]{language} . "_freq" ;
 }
 
+# ?
+my $variable_mystere = 0 ;
+
 # If -i is called,
 # then overwrite existing frequencies
 # and check if there are missing frequency files
 for (my $i=0 ; $i <$texts_nbr ; $i++) {
-   if ($opts{"i"} or !-e $texts[$i]{frequencies} or exists $opts{"n"}) {
-	print "Le fichier $texts[$i]{frequencies} n'a pas été trouvé !\n" if (!-e $texts[$i]{frequencies}) ;
-	print "\tCalcul des fréquences de $texts[$i]{corpus}...\n";
+   if ($opts{"i"} or !-e $texts[$i]{frequencies}) {
+	print "File $texts[$i]{frequencies} not found!\n" if (!-e $texts[$i]{frequencies}) ;
+	print "\tComputing frequencies for $texts[$i]{corpus}...\n";
 	Calcul::freq($texts[$i]{corpus},$texts[$i]{frequencies},$gramm_number);
+	$variable_mystere = 1 ;
+   }
+   else {
+       open(F, '<:utf8',  $texts[$i]{frequencies});
+       my @f = <F>;
+       close F;
+       my $lines = @f;
+       if ($lines != $max_num or $f[0] !~ /^(\S*?\t\S*?)(\t\S*?\t\S*?){$gramm_number}$/) {
+	   print "File $texts[$i]{frequencies} does not contain the require amount of words\n" ;
+	   print "\tComputing frequencies for $texts[$i]{corpus}...";
+	   Calcul::freq($texts[$i]{corpus},$texts[$i]{frequencies},$gramm_number);
+	   print "\n" ;
+	   $variable_mystere = 1 ;
+       }
    }
 }
 
+print "\n" if $variable_mystere == 1 ;
+
 # wonders if the user just wanted to create the frequency files
 if ($opts{"i"} and !exists $opts{"f"}){
-    print "Voulez-vous analyser un fichier maintenant ?\n" ;
+    print "Would you like to analyze a text now?\n" ;
     exit if (<STDIN> !~ /^o/i) ;
 }
 
@@ -74,10 +114,14 @@ if (exists $opts{ "f" }) {
 
 # else : prompts the user for the filename
 else {
-   print "Bonjour, quel est le nom du fichier à analyser ?\n" ;
+   print "Hello, which file would you like to analyze?\n" ;
    chomp ($file = <STDIN>) ;
 }
 
+
+print "##################################\n";
+print "\tSTANDARD ANALYSIS" ;
+print "\n##################################\n";
 
 # gets the weight of words in the file for each language
 my %total_words ;
@@ -86,23 +130,24 @@ for (my $i=0 ; $i <$texts_nbr ; $i++) {
 }
 
 # compares and prints the highest weight
-Answer::method_result("mots",\%total_words);
+Answer::method_result("word",\%total_words);
 
 # gets the weight of suffixes in the file for each language
 my %total_suffixes ;
 for (my $i=0 ; $i <$texts_nbr ; $i++) {
-    $total_suffixes{ "$texts[$i]{language}" } = MethodStandard::suffixes($file, $texts[$i]{frequencies},$gramm_number);
+    $total_suffixes{ "$texts[$i]{language}" } = MethodStandard::suffixes($file, $texts[$i]{frequencies});
 }
 
 # compares and prints the highest weight
-Answer::method_result("suffixes",\%total_suffixes);
+Answer::method_result("suffix",\%total_suffixes);
 
 # combines results
 Answer::compare(\%total_words,\%total_suffixes);
 
 # the fun and accurate part
 print "\n##################################\n";
-print "\tANALYSE VECTORIELLE\n" ;
+print "\tVECTORIAL ANALYSIS" ;
+print "\n##################################\n";
 
 # compares file vector with corpus vectors, prints the result
 MethodVector::words($file,\@texts);

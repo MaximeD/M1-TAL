@@ -18,8 +18,8 @@ sub method_result {
     }
 
     # name of the method used (shift gets the first string argument)
-    my $methode = shift ;
-    print "La langue du texte d'après l'analyse des $methode est :\n";
+    my $method = shift ;
+    print "According to the $method analysis, the file is in...\n";
     
     # gets highest key
     my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
@@ -30,7 +30,7 @@ sub method_result {
 	printf(" (%.2f%%)\n", ($results{$max_weight} / $total_weight) * 100);
     }
     else {
-      print "\tINCONNUE\n";
+      print "\tUNKNOWN\n";
     }
 }
 
@@ -50,14 +50,14 @@ sub compare {
     
     # merges results  if the values are valid
     unless ($total_weight_word == 0 or $total_weight_suffixes == 0) {
-	print "\nCombinaison des résultats...\n" ;
+	print "\nMerging results...\n" ;
 	while ( my ($k,$v) = each %results_words ) {
 	    $results{ $k } = (($results_words{ $k } / $total_weight_word) + ($results_suffixes{ $k } / $total_weight_suffixes)) * 100 ;
 	    $total_weight += $results{ $k } ;
 	}
 	
 	# prints max value of hash wich is the answer
-	print "La langue du texte après combinaison est :\n";
+	print "The text is in...\n";
 	my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
 	    print "\t" . lc($max_weight) ;
 	    printf(" (%.2f%%)\n", ($results{$max_weight} / $total_weight) * 100);
@@ -65,7 +65,7 @@ sub compare {
 	
     # if no valid values, reports it
     else{
-	print "Les résultats ne peuvent pas être combinés\n";	
+	print "Unable to merge results\n";	
     }
 
 }

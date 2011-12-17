@@ -51,6 +51,7 @@ my @texts = (
     {language => "greek"},
     {language => "german"},
     {language => "italian"},
+    {language => "klingon"},
     {language => "portuguese"},
     {language => "spanish"},
     {language => "swedish"},

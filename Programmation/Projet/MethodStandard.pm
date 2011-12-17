@@ -9,7 +9,7 @@ use utf8;
 binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 
-# computes word weight for each language
+# compute word weight for each language
 sub words {
   my %hash_corpus ;
 
@@ -20,7 +20,7 @@ sub words {
 
   open(F, '<:utf8', "$_[0]");
 
-  # if a word in file has a weight in the corpus, adds it
+  # if a word in file has a weight in the corpus, add it
   while (<F>) {
     my @words = split(/\pP|\pS|\s/, $_); # extract words
     for my $word(@words) {
@@ -34,7 +34,7 @@ sub words {
   return $weight;
 }
 
-# computes suffixes weight for each language
+# compute suffixes weight for each language
 sub suffixes {
   my %hash_corpus ;
   my $weight = 0 ;
@@ -43,7 +43,7 @@ sub suffixes {
   
    open(F, '<:utf8', "$_[0]");
 
-  # if a suffix in file has a weight in the corpus, adds it
+  # if a suffix in file has a weight in the corpus, add it
   while (<F>) {
     my @words = split(/\pP|\pS|\s/, $_); # extract words
     for my $word(@words) {

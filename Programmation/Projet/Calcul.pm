@@ -7,7 +7,7 @@ use utf8;
 binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 
-# computes word frequencies
+# compute word frequencies
 sub freq {
   my %freq ;
   my $count_words = 0 ;                   # total words in file / reinitialize
@@ -16,7 +16,7 @@ sub freq {
 
   open(CORPUS, '<:utf8', $corpus);
 
-  # creates hash of word frequencies
+  # create hash of word frequencies
   while (<CORPUS>) {
     chomp($_);                          # rm newlines
     for my $word(split(/\pP|\pS|\s/, $_)) {
@@ -36,13 +36,13 @@ sub freq {
   # create hash of gramm frequencies
   my @gramms_hash ;
 
-  # creates hash of word frequencies
+  # create hash of word frequencies
   for (my $i = 1; $i <= $main::gramm_number ; $i++) {
       open(CORPUS, '<:utf8', $corpus);
       my %gramm ;
       my $count_suffixes ;
       while (<CORPUS>) {
-	  chomp($_);                             # rm newlines
+	  chomp($_);                              # rm newlines
  	  for my $word(split(/\pP|\pS|\s/, $_)) { # extract words
 	      my $tail = substr $word, -$i ;
 	      $gramm{$tail}++ and $count_suffixes++ if (length($tail) == $i);
@@ -56,17 +56,17 @@ sub freq {
   }
 
 
-  # sorts hashes
+  # sort hashes
   my @sorted_words = sort { ( $freq{$b} <=> $freq{$a}) or ($a cmp $b) } keys %freq ;
   my @sorted_gramms ;
   for my $i(1.. $#gramms_hash) {
       for my $key (sort {$gramms_hash[$i]->{$b} <=> $gramms_hash[$i]->{$a} } keys %{$gramms_hash[$i]}) {
-	  push @{ $sorted_gramms[$i]}, $key ;
+	  push @{ $sorted_gramms[$i] }, $key ;
       }
   }
 
 
-  # writes in the file
+  # write in the file
   open(OUTPUT, '>:utf8', $_[1] );
   for (my $i = 0; $i < $main::max_num ; $i++) {
       if (defined($sorted_words[$i])) {
@@ -112,7 +112,7 @@ sub freq_txt {
     return \%hash_freq_text ;
 }
 
-# acquires frequencies computed above
+# acquire word frequencies computed above
 sub txt2hash{
   my $corpus = $_[0] ;
   my %freq;
@@ -128,7 +128,7 @@ sub txt2hash{
 }
 
 
-# computes suffixes weight for each language
+# acquire suffix frequencies computed above
 sub txt2hash_suffix {
   my $corpus = $_[0] ;
   my %freq;

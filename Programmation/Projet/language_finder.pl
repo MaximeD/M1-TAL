@@ -95,7 +95,7 @@ for (my $i=0 ; $i <$texts_nbr ; $i++) {
 
 print "\n" if $variable_mystere == 1 ;
 
-# wonders if the user just wanted to create the frequency files
+# wonder if the user just wanted to create the frequency files
 if ($opts{"i"} and !exists $opts{"f"}){
     print "Would you like to analyze a text now?\n" ;
     exit if (<STDIN> !~ /^o/i) ;
@@ -123,25 +123,25 @@ print "##################################\n";
 print "\tSTANDARD ANALYSIS" ;
 print "\n##################################\n";
 
-# gets the weight of words in the file for each language
+# get the weight of words in the file for each language
 my %total_words ;
 for (my $i=0 ; $i <$texts_nbr ; $i++) {
     $total_words{ "$texts[$i]{language}" } = MethodStandard::words($file, $texts[$i]{frequencies}) ;
 }
 
-# compares and prints the highest weight
+# compare and print the highest weight
 Answer::method_result("word",\%total_words);
 
-# gets the weight of suffixes in the file for each language
+# get the weight of suffixes in the file for each language
 my %total_suffixes ;
 for (my $i=0 ; $i <$texts_nbr ; $i++) {
     $total_suffixes{ "$texts[$i]{language}" } = MethodStandard::suffixes($file, $texts[$i]{frequencies});
 }
 
-# compares and prints the highest weight
+# compare and print the highest weight
 Answer::method_result("suffix",\%total_suffixes);
 
-# combines results
+# combine results
 Answer::compare(\%total_words,\%total_suffixes);
 
 # the fun and accurate part
@@ -149,7 +149,7 @@ print "\n##################################\n";
 print "\tVECTORIAL ANALYSIS" ;
 print "\n##################################\n";
 
-# compares file vector with corpus vectors, prints the result
+# compare file vector with corpus vectors, print the result
 MethodVector::words($file,\@texts);
 
 # same thing with suffixes

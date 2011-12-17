@@ -7,7 +7,7 @@ use utf8;
 binmode(STDOUT, ":utf8");
 binmode(STDIN, ":utf8");
 
-# compares frequencies, prints highest
+# compare frequencies, print highest
 sub method_result {
     my %results = %{ $_[1] } ; # hash of word / suffix weights
 
@@ -21,10 +21,10 @@ sub method_result {
     my $method = shift ;
     print "According to the $method analysis, the file is in...\n";
     
-    # gets highest key
+    # get highest key
     my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
     
-    # makes sure there is a valid result, and prints it
+    # make sure there is a valid result, and print it
     if ($results{$max_weight} != 0) {
 	print "\t" . lc($max_weight) ;
 	printf(" (%.2f%%)\n", ($results{$max_weight} / $total_weight) * 100);
@@ -34,7 +34,7 @@ sub method_result {
     }
 }
 
-# compares the results of words and suffixes
+# compare the results of words and suffixes
 sub compare {
     my %results_words = %{ $_[0] } ;      # values for words
     my %results_suffixes = %{ $_[1] };   # values for suffixes
@@ -48,7 +48,7 @@ sub compare {
 	$total_weight_suffixes += $results_suffixes{ $k } ;
     }
     
-    # merges results  if the values are valid
+    # merge results if the values are valid
     unless ($total_weight_word == 0 or $total_weight_suffixes == 0) {
 	print "\nMerging results...\n" ;
 	while ( my ($k,$v) = each %results_words ) {
@@ -56,14 +56,14 @@ sub compare {
 	    $total_weight += $results{ $k } ;
 	}
 	
-	# prints max value of hash wich is the answer
+	# print max value of hash which is the answer
 	print "The text is in...\n";
 	my $max_weight = (reverse sort {$results{$a} <=> $results{$b}} keys %results)[0] ;
 	    print "\t" . lc($max_weight) ;
 	    printf(" (%.2f%%)\n", ($results{$max_weight} / $total_weight) * 100);
 	}
 	
-    # if no valid values, reports it
+    # if no valid values, report it
     else{
 	print "Unable to merge results\n";	
     }

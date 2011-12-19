@@ -1,4 +1,13 @@
 #!/usr/bin/env perl
+
+=pod
+
+=head1 NAME
+
+B<language_finder> - Recognize language of a file
+
+=cut
+
 use strict;
 use warnings;
 use utf8;
@@ -156,3 +165,74 @@ MethodVector::words($file,\@texts);
 # same thing with suffixes
 MethodVector::suffixes($file,\@texts,$gramm_number);
 
+
+=pod
+
+=head1 SYNOPSIS
+
+B<language_finder> B<-f> text to analyze
+B<-l> number of occurences to process
+B<-g> highest suffix length to process
+(B<-i> reinitialize)
+
+=head1 DESCRIPTION
+
+B<language_finder>
+will recognize the original language
+of a source file given by the user.
+To do so,
+it will compare the input text words with a corpus.
+At the moment, it is able to recognize the following languages:
+czech, english, finnish, german, italian, klingon, spanish,
+dutch, esperanto, french, greek, portuguese and swedish.
+
+Any other language can easily be added by putting
+a text file written in this language
+into the I<corpus> directory and by adding the relevant line
+in the list of languages of this file.
+
+
+=head1 OPTIONS
+
+=over
+
+=item B<-f> text to analyze
+
+=item B<-l> <integer> number of occurences to process
+
+=item B<-g> <integer> highest suffix length to process
+
+=item B<-l> <integer> number of occurences to process
+
+=item B<-i> reinitialize frequencie files
+
+=back
+
+
+=head1 DIRECTORIES
+
+=over
+
+=item I<corpus> contains a reference file per language.
+This file is a text (likely a novel)
+that will be used to get the frequency of words.
+
+=item I<frequencies> frequencies computed will be transformed
+into an array associating a word (or a "suffix") and it's frequency.
+This is the files that will be overwritten with the B<-i> switch.
+
+=back
+
+
+=head1 AUTHORS
+
+=over
+
+=item DEMOLIN Maxime <maxime.demolin@etu.unistra.fr>
+
+=item TALEB Chafik   <chafik.taleb@etu.unistra.fr>
+
+=back
+
+
+=cut

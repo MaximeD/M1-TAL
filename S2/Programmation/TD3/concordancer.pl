@@ -72,52 +72,30 @@ sub concordancer {
 
   # read it
   while (my $line = <INPUT>) {
-    # look where the word starts in the line
-    my $start_pos = index($line,$word_to_look_for);
-
-    # if word was not found, index = -1
-    # so we check it was somewhere in the line
-    if ($start_pos != -1) {
-      # we compute where we should start to extract from the left
-      # and where it ends
-      my $left_start = $start_pos - $side_spread;
-      my $left_end   = $side_spread;
-
-      # in case the starting position is inferior to the context length
-      # we must ensure we won't get a negative number
-      if ($start_pos < $side_spread) {
-	$left_start = 0;
-	$left_end = $start_pos;
-      }
-
-      my $left_context = substr($line,$left_start,$left_end);
-
-      # and same thing with the rigth context
-      my $right_start = $start_pos + length($word_to_look_for);
-
-      my $right_context = substr($line,$right_start,$side_spread);
-
-      # we chomp it in case it reached end of line
-      # and included the trailing line
-      chomp($right_context);
-
-      # now we have everything,
-      # fill with white spaces to get a pretty aligned output
-      if (length($left_context) < $side_spread) {
-	my $left_missing = $side_spread - length($left_context) ;
-	$left_context = " " x $left_missing . $left_context;
-      }
+    while ($line =~ m/
+		       (?<left>.{0,$side_spread})  # match the left part
+		       $word_to_look_for           # match the word
+		       (?<right>.{0,$side_spread}) # match the right part
+		     /mgx) {
 
       # results are stored in a hash
       my %concord = (
-		     left  => $left_context,
-		     right => $right_context
+		     left  => $+{left},
+		     right => $+{right}
 		    );
+
+      # now we have everything,
+      # fill with white spaces to get a pretty aligned output
+      if (length($concord{left}) < $side_spread) {
+	my $left_missing = $side_spread - length($concord{left}) ;
+	$concord{left} = " " x $left_missing . $concord{left};
+      }
 
       # and this hash is added to the results
       push @results, { %concord };
     }
-  }
+
+    }
   close(INPUT);
 
 

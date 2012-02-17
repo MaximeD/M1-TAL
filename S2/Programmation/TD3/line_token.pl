@@ -6,6 +6,22 @@ binmode(STDIN,  'utf8');
 binmode(STDOUT, 'utf8');
 binmode(STDERR, 'utf8');
 
+=pod
+
+=head1 NAME
+
+B<line_token>
+
+Compute how many token there are in a line,
+if this number is inferior to the one you set,
+print the content in another file.
+
+=head1 SYNOPSIS
+
+&line_token($file_to_parse,$output_file,$max_token);
+
+=cut
+
 # the file you want to analyse
 my $file = ("a.txt");
 # the file you want to store the results in

@@ -36,11 +36,17 @@ print join(", ", @words) . "\n";
 
 sub tag_match {
   my ($file,$tag) = @_;
-  my @results ;
+  my @results;
+
   # open file
   open(INPUT, '<', $file);
+
+  # read file
   while (my $line = <INPUT>) {
+
+    # check if the line contains the tag
     if ($line =~ m/$tag/) {
+      # if yes, retrieve every info before the comma separator
       $line =~ m/([^,]+)/;
       push(@results, $1);
     }

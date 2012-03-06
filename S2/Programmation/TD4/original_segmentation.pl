@@ -20,7 +20,7 @@ Get back to the original segmentation of a sentence edited by a MT
 
 =cut
 
-my $file = "mten.tag";
+my $file = "mtfr.tag";
 
 my $original = &original_seg($file);
 
@@ -31,9 +31,10 @@ sub original_seg {
 
   open(CORPUS, '<', $file);
   while (<CORPUS>) {
-    $_ =~ s/: \n/:/;
-    $_ =~ s/; \n/;/;
-#    $_ =~ s/\. \n/\./;
+    # remove newlines after :;)
+      $_ =~ s!([:;\)]) \n!$1!;
+    # unfortunatly there is not many things that can be done with dots
+      # $_ =~ s/\. \n/\./;
     print $_;
   }
   close(CORPUS);

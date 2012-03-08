@@ -156,6 +156,7 @@ foreach my $keyword(@keywords_infos) {
   while (my ($key,$value) = each %$keyword) {
     if ($key ne 'name' && $key ne 'idf') {
       print "\t$key\t$value\n";
+      print "\t\ttf * idf = " . $value * $idf . "\n";
     }
   }
   print "\n";

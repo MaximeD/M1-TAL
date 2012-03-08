@@ -90,6 +90,12 @@ foreach my $keyword(@keyword_list) {
   # initialize the finding var
   my $found = 0;
 
+  # where to put doc name and the term frequency in it
+  my %freq = (
+	      doc_name => "",
+	      freq     => 0
+	     );
+
   print "Fréquence de \"$keyword\"\n" ;
   # look for the term in every doc
   foreach my $doc(@docs) {
@@ -105,39 +111,41 @@ foreach my $keyword(@keyword_list) {
       if ($line_elt[0] eq $keyword){
 	$found++;
 	chomp($line_elt[1]) ;
-	$keyword{ $doc{ name } } = $line_elt[1] ;
-	print "\t" . $doc{ name } . " : " . $keyword{ $doc{ name } } . "\n";
+
+	$freq{ doc_name } = $doc{ name };
+	$freq{ freq }     = $line_elt[1];
+
+	print "\t" . $doc{ name } . " : " . $line_elt[1] . "\n";
 	last;
       }
     }
     close (DOC);
   }
 
-  # the number of texts where it is
-  $keyword{ found } = $found;
-  print "\t\tTrouvé dans $found textes\n";
 
+  # the number of texts where it is
+  print "\t\tTrouvé dans $found textes\n";
 
   # good,
   # now compute idf
   my $idf;
-  if ($keyword{ found } != 0) {
+  if ($found != 0) {
     # compute idf
     $idf = log(abs($D_cardinality) /  $found) ;
 
-    print "\t\tidf: " . $idf . "\n";
+    print "\t\tidf: " . $idf . "\n\n";
   }
   else {
     $idf = "";
   }
 
-
   # convert array values
   # to anonymous hashes
   $keyword = {
-	     name  => $keyword,
-	     found => $found,
-	     idf   => $idf
+	      name  => $keyword,
+	      found => $found,
+	      idf   => $idf,
+	      freq  => \%freq,
 	     } ;
 }
 
@@ -145,9 +153,17 @@ print "\n";
 
 # compute the idf
 foreach my $keyword(@keyword_list) {
-  my %keyword = %$keyword;
 
-  while (my ($k,$v) = each %keyword) {
-    print "$k : $v\n";
+  while (my ($k,$v) = each %$keyword) {
+    if ($k ne "freq") {
+      print "$k : $v\n";
+    }
+    elsif ($k eq "freq") {
+      while (my ($doc,$freq) = each %$v) {
+     	print "\t$doc -> $freq\n";
+      }
+    }
   }
+  print "\n";
 }
+

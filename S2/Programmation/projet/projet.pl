@@ -90,7 +90,10 @@ foreach my $keyword(@keyword_list) {
   # initialize the finding var
   my $found = 0;
 
-  # where to put doc name and the term frequency in it
+  # the list containing docs and term frequency
+  my @freq_list ;
+
+  # the content of that list
   my %freq = (
 	      doc_name => "",
 	      freq     => 0
@@ -112,8 +115,12 @@ foreach my $keyword(@keyword_list) {
 	$found++;
 	chomp($line_elt[1]) ;
 
-	$freq{ doc_name } = $doc{ name };
-	$freq{ freq }     = $line_elt[1];
+	push @freq_list, {
+			  doc_name => $doc{ name },
+			  freq     => $line_elt[1]
+			 };
+	# $freq{ doc_name } = $doc{ name };
+	# $freq{ freq }     = $line_elt[1];
 
 	print "\t" . $doc{ name } . " : " . $line_elt[1] . "\n";
 	last;
@@ -145,7 +152,7 @@ foreach my $keyword(@keyword_list) {
 	      name  => $keyword,
 	      found => $found,
 	      idf   => $idf,
-	      freq  => \%freq,
+	      freq  => \@freq_list,
 	     } ;
 }
 
@@ -159,11 +166,12 @@ foreach my $keyword(@keyword_list) {
       print "$k : $v\n";
     }
     elsif ($k eq "freq") {
-      while (my ($doc,$freq) = each %$v) {
-     	print "\t$doc -> $freq\n";
+      foreach my $hash (@$v) {
+	while (my ($doc,$freq) = each %$hash) {
+	  print "\t$doc -> $freq\n";
+	}
       }
     }
   }
-  print "\n";
 }
 

@@ -158,7 +158,10 @@ foreach my $keyword(@keyword_list) {
 
 print "\n";
 
-# compute the idf
+# here comes the big stuff !
+# basically, you have an Array of Hashes
+# BUT the value of the key "freq" is a new list storing a new hash :D
+# The worst part is that it seemed the easiest way...
 foreach my $keyword(@keyword_list) {
 
   while (my ($k,$v) = each %$keyword) {

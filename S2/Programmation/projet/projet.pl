@@ -83,23 +83,18 @@ for (my $i = 0; $i < @docs; $i++){
 
 print "\n";
 
-my %keyword ;
-
+#my %keyword ;
+my @keywords_infos ;
 # parse the keyword list
 foreach my $keyword(@keyword_list) {
-  # initialize the finding var
-  my $found = 0;
+  my %keyword ;
+  # convert array values to hashes
+  $keyword{ name } = $keyword;
+  my ($found, $idf);
+  # by default, found zero occurrences
+  $found = 0;
 
-  # the list containing docs and term frequency
-  my @freq_list ;
-
-  # the content of that list
-  my %freq = (
-	      doc_name => "",
-	      freq     => 0
-	     );
-
-  print "Fréquence de \"$keyword\"\n" ;
+#  print "Fréquence de \"$keyword{ name }\"\n" ;
   # look for the term in every doc
   foreach my $doc(@docs) {
     my %doc = %$doc;
@@ -111,18 +106,13 @@ foreach my $keyword(@keyword_list) {
       # if the first column matches the word
       # increment var
       # and put value in hash
+      # key is doc name and value is term frequency in doc
       if ($line_elt[0] eq $keyword){
 	$found++;
 	chomp($line_elt[1]) ;
 
-	push @freq_list, {
-			  doc_name => $doc{ name },
-			  freq     => $line_elt[1]
-			 };
-	# $freq{ doc_name } = $doc{ name };
-	# $freq{ freq }     = $line_elt[1];
-
-	print "\t" . $doc{ name } . " : " . $line_elt[1] . "\n";
+	$keyword{ $doc{ name } } = $line_elt[1];
+#	print "\t" . $doc{ name } . " : " . $line_elt[1] . "\n";
 	last;
       }
     }
@@ -130,51 +120,44 @@ foreach my $keyword(@keyword_list) {
   }
 
 
-  # the number of texts where it is
-  print "\t\tTrouvé dans $found textes\n";
+  # the number of texts where the term is
+#  print "\t\tTrouvé dans $found textes\n";
 
   # good,
   # now compute idf
-  my $idf;
   if ($found != 0) {
     # compute idf
     $idf = log(abs($D_cardinality) /  $found) ;
 
-    print "\t\tidf: " . $idf . "\n\n";
+#    print "\t\tidf: " . $idf . "\n\n";
   }
   else {
     $idf = "";
   }
+  $keyword{ idf } = $idf;
 
-  # convert array values
-  # to anonymous hashes
-  $keyword = {
-	      name  => $keyword,
-	      found => $found,
-	      idf   => $idf,
-	      freq  => \@freq_list,
-	     } ;
+  push @keywords_infos, \%keyword;
 }
 
 print "\n";
 
-# here comes the big stuff !
-# basically, you have an Array of Hashes
-# BUT the value of the key "freq" is a new list storing a new hash :D
-# The worst part is that it seemed the easiest way...
-foreach my $keyword(@keyword_list) {
 
-  while (my ($k,$v) = each %$keyword) {
-    if ($k ne "freq") {
-      print "$k : $v\n";
-    }
-    elsif ($k eq "freq") {
-      foreach my $hash (@$v) {
-	while (my ($doc,$freq) = each %$hash) {
-	  print "\t$doc -> $freq\n";
-	}
-      }
+# here comes the big stuff !
+
+# oh yeah and the goal is to compute tf * idf
+foreach my $keyword(@keywords_infos) {
+  print $$keyword{ name } . " :\n";
+
+  # each keyword has it's own idf
+  # we store it now to ease the reading
+  my $idf = $$keyword{ idf };
+  print "\tidf:" . $idf . "\n";
+
+  while (my ($key,$value) = each %$keyword) {
+    if ($key ne 'name' && $key ne 'idf') {
+      print "\t$key\t$value\n";
     }
   }
+  print "\n";
 }
 

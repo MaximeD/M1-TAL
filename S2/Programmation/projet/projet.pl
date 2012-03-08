@@ -18,7 +18,7 @@ my $path_freq = "term_freq/";
 
 # temp wordlist we look for
 # will have to be replace by a query
-my @keyword_list = qw/la petite maison dans la prairie/;
+my @keyword_list = qw/la grosse maison jaune dans la verte prairie/;
 
 
 # get the list of docs to analyse
@@ -71,7 +71,7 @@ for (my $i = 0; $i < @docs; $i++){
   # if you want to look into the freq files
   my @sorted_terms = sort { ( $freq{$b} <=> $freq{$a}) or ($a cmp $b) } keys %freq ;
 
-  # where we write the results
+  # where we write the term frequency
   open(OUTPUT, ">", $docs[$i]{ output });
 
   for (my $i = 0; $i < @sorted_terms; $i++) {
@@ -112,17 +112,19 @@ foreach my $keyword(@keyword_list) {
   }
 }
 
-# while (my ($k, $v) = each %keyword){
-	# if ($v != 0) {
-		# my $to_log = abs($D_cardinality) / abs($v);
-		# my $result = log($to_log);
-		# $keyword{ idf } = $result;
-		# print $k . "\t a pour idf\t" . $result . "\n";
-	# }
-	# else {
-		# print $k . "\tn'a pas ete trouve\n";
-	# }
-# }
+foreach my $keyword(@keyword_list) {
+  # prevent illegal division by zero
+  if ($keyword{ $keyword } != 0) {
+    # compute idf
+    my $idf = log(abs($D_cardinality) /  $keyword{ $keyword }) ;
+
+    print "$keyword\ta pour idf: " . $idf . "\n";
+  }
+  else {
+    print $keyword . " n'apparaît dans aucun corpus\n";
+  }
+}
+
 
 # print "Magic!!!\n";
 # foreach my $doc (@docs) {

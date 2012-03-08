@@ -81,14 +81,16 @@ for (my $i = 0; $i < @docs; $i++){
   close(OUTPUT);
 }
 
-my %keyword;
+print "\n";
+
+my %keyword ;
 
 # parse the keyword list
 foreach my $keyword(@keyword_list) {
-
   # initialize the finding var
   my $found = 0;
 
+  print "Fréquence de \"$keyword\"\n" ;
   # look for the term in every doc
   foreach my $doc(@docs) {
     my %doc = %$doc;
@@ -104,42 +106,48 @@ foreach my $keyword(@keyword_list) {
 	$found++;
 	chomp($line_elt[1]) ;
 	$keyword{ $doc{ name } } = $line_elt[1] ;
+	print "\t" . $doc{ name } . " : " . $keyword{ $doc{ name } } . "\n";
 	last;
       }
     }
     close (DOC);
-    $keyword{ $keyword } = $found;
   }
-}
 
-foreach my $keyword(@keyword_list) {
-  # prevent illegal division by zero
-  if ($keyword{ $keyword } != 0) {
+  # the number of texts where it is
+  $keyword{ found } = $found;
+  print "\t\tTrouvé dans $found textes\n";
+
+
+  # good,
+  # now compute idf
+  my $idf;
+  if ($keyword{ found } != 0) {
     # compute idf
-    my $idf = log(abs($D_cardinality) /  $keyword{ $keyword }) ;
+    $idf = log(abs($D_cardinality) /  $found) ;
 
-    print "$keyword\ta pour idf: " . $idf . "\n";
+    print "\t\tidf: " . $idf . "\n";
   }
   else {
-    print $keyword . " n'apparaît dans aucun corpus\n";
+    $idf = "";
   }
+
+
+  # convert array values
+  # to anonymous hashes
+  $keyword = {
+	     name  => $keyword,
+	     found => $found,
+	     idf   => $idf
+	     } ;
 }
 
+print "\n";
 
-# print "Magic!!!\n";
-# foreach my $doc (@docs) {
-#   my %doc = %$doc ;
-#   while (my ($k, $v) = each %keyword){
-#     print "$k\n";
-#     if ($v != 0) {
-#       my $to_log = abs($D_cardinality) / abs($v);
-#       my $result = log($to_log);
-#       $keyword{ idf } = $result;
-#       print "$doc{ name } tf * idf = " .  $keyword{ $doc{ name } } * $keyword{ idf } . "\n" ;
-#       # print $k . "\t a pour idf\t" . $result . "\n";
-#     }
-#     else {
-#       print $k . "\tn'a pas ete trouve\n";
-#     }
-#   }
-# }
+# compute the idf
+foreach my $keyword(@keyword_list) {
+  my %keyword = %$keyword;
+
+  while (my ($k,$v) = each %keyword) {
+    print "$k : $v\n";
+  }
+}

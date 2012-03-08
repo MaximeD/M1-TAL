@@ -31,9 +31,6 @@ foreach my $file (readdir(DIR)) {
   # check it is a text file
   next unless (-f $path_doc . $file);
 
-  # report it's name
-  print STDERR "$file\n";
-
   # populate the array with informations
   # concerning files
   push @docs, {
@@ -99,9 +96,14 @@ foreach my $keyword(@keyword_list) {
     open (DOC, "<", $doc{ output });
     while (<DOC>){
       my @line_elt = split (/\t/ , $_);
+
+      # if the first column matches the word
+      # increment var
+      # and put value in hash
       if ($line_elt[0] eq $keyword){
 	$found++;
-	$keyword{ $doc { name } } = $line_elt[1] ;
+	chomp($line_elt[1]) ;
+	$keyword{ $doc{ name } } = $line_elt[1] ;
 	last;
       }
     }
@@ -122,20 +124,20 @@ foreach my $keyword(@keyword_list) {
 	# }
 # }
 
-print "Magic!!!\n";
-foreach my $doc (@docs) {
-  my %doc = %$doc ;
-  while (my ($k, $v) = each %keyword){
-    print "$k\n";
-    if ($v != 0) {
-      my $to_log = abs($D_cardinality) / abs($v);
-      my $result = log($to_log);
-      $keyword{ idf } = $result;
-      print "$doc{ name } tf * idf = " .  $keyword{ $doc{ name } } * $keyword{ idf } . "\n" ;
-      # print $k . "\t a pour idf\t" . $result . "\n";
-    }
-    else {
-      print $k . "\tn'a pas ete trouve\n";
-    }
-  }
-}
+# print "Magic!!!\n";
+# foreach my $doc (@docs) {
+#   my %doc = %$doc ;
+#   while (my ($k, $v) = each %keyword){
+#     print "$k\n";
+#     if ($v != 0) {
+#       my $to_log = abs($D_cardinality) / abs($v);
+#       my $result = log($to_log);
+#       $keyword{ idf } = $result;
+#       print "$doc{ name } tf * idf = " .  $keyword{ $doc{ name } } * $keyword{ idf } . "\n" ;
+#       # print $k . "\t a pour idf\t" . $result . "\n";
+#     }
+#     else {
+#       print $k . "\tn'a pas ete trouve\n";
+#     }
+#   }
+# }

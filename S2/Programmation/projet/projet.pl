@@ -106,8 +106,6 @@ for (my $i = 0; $i < @docs; $i++) {
   }
 }
 
-print "\n";
-
 
 
 ################################################
@@ -167,4 +165,15 @@ for (my $i = 0; $i < @docs; $i++) {
   push @matrix, [@matrix_column];
 }
 
-print Dumper(@matrix);
+#print Dumper(@matrix);
+
+
+# now we can print our array to a csv file
+open(CSV, '>', "results.csv");
+foreach my $column (@matrix) {
+  my @column = @$column;
+
+  print CSV join("\t", @column) . "\n";
+}
+close(CSV);
+

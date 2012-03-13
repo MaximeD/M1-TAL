@@ -114,13 +114,32 @@ print "\n";
 # Now we have every results we need to compare #
 ################################################
 
-
+# create an array of array
+# storing each doc similarity with each other
 my @matrix ;
 
-for (my $i = 0; $i < @docs; $i++) { 
+# fill out the first colum
+# notice in this one, first row is empty
+push @matrix, (
+	       [""]
+	      );
+
+foreach (@docs) {
+  my %tmp_hash = %$_ ;
+  push @{ $matrix[0] }, $tmp_hash{ name };
+}
+
+
+for (my $i = 0; $i < @docs; $i++) {
+  # declare new column we want to fill
+  my @matrix_column;
+
+
   for (my $j = @docs - 1 ; $j >= $i;$j--) {
     my $base_word = $docs[$i]{ data };
     my $comp_word = $docs[$j]{ data };
+
+    # vars needed for computing cosine similarity
     my ($numerator, $norm_doc1, $norm_doc2,$denominator,$cos);
 
     foreach my $term ( keys %$base_word ) {
@@ -130,6 +149,10 @@ for (my $i = 0; $i < @docs; $i++) {
     }
     $denominator = sqrt($norm_doc1) * sqrt($norm_doc2);
     $cos = $numerator / $denominator ;
-    print $cos . "\n";
+    unshift @matrix_column, $cos;
   }
+  unshift @matrix_column, $docs[$i]{ name };
+  push @matrix, [@matrix_column];
 }
+
+print Dumper(@matrix);

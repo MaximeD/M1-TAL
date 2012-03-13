@@ -121,10 +121,15 @@ for (my $i = 0; $i < @docs; $i++) {
   for (my $j = @docs - 1 ; $j >= $i;$j--) {
     my $base_word = $docs[$i]{ data };
     my $comp_word = $docs[$j]{ data };
-    my $numerator;
+    my ($numerator, $norm_doc1, $norm_doc2,$denominator,$cos);
+
     foreach my $term ( keys %$base_word ) {
-      $numerator += $docs[$i]{ data }{ $term } * $docs[$i]{ data }{ $term } if exists $docs[$i]{ data }{ $term };
+      $numerator += $docs[$i]{ data }{ $term } * $docs[$j]{ data }{ $term } if exists $docs[$j]{ data }{ $term };
+      $norm_doc1 += $docs[$i]{ data }{ $term } ** 2;
+      $norm_doc2 += $docs[$j]{ data }{ $term } ** 2 if exists $docs[$j]{ data }{ $term };
     }
-    print $numerator . "\n";
+    $denominator = sqrt($norm_doc1) * sqrt($norm_doc2);
+    $cos = $numerator / $denominator ;
+    print $cos . "\n";
   }
 }

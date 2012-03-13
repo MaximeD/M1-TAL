@@ -6,6 +6,7 @@ binmode(STDIN, 'utf8');
 binmode(STDOUT, 'utf8');
 binmode(STDERR, 'utf8');
 
+use Data::Dumper;
 #############
 # main vars #
 #############
@@ -15,11 +16,6 @@ my $path_doc  = "documents/";
 
 # the place where the freqs are stored
 my $path_freq = "term_freq/";
-
-# temp wordlist we look for
-# will have to be replace by a query
-my @keyword_list = qw/la grosse maison jaune dans la verte prairie/;
-
 
 # get the list of docs to analyse
 opendir(DIR, $path_doc);
@@ -37,18 +33,17 @@ foreach my $file (readdir(DIR)) {
 	       name 	=> $file,
 	       source 	=> $path_doc . $file,
 	       output 	=> $path_freq . $file,
+	       data     => '',
 	      }
 }
 
 closedir(DIR);
 
-# compute the cardinality of the total number of docs in the corpus
-my $D_cardinality = scalar(@docs);
-
 # process every doc
 for (my $i = 0; $i < @docs; $i++){
   print STDERR "Processing $docs[$i]{ name }...\n";
 
+  # declare the hash {word => frequency}
   my %freq;
 
   # open doc
@@ -66,99 +61,70 @@ for (my $i = 0; $i < @docs; $i++){
   }
   close(DOC);
 
-  # sort is optional
-  # but it gives a pretty output for the user
-  # if you want to look into the freq files
-  my @sorted_terms = sort { ( $freq{$b} <=> $freq{$a}) or ($a cmp $b) } keys %freq ;
-
-  # where we write the term frequency
-  open(OUTPUT, ">", $docs[$i]{ output });
-
-  for (my $i = 0; $i < @sorted_terms; $i++) {
-    print OUTPUT ($sorted_terms[$i] . "\t" . $freq{$sorted_terms[$i]} . "\n");
-  }
-
-  close(OUTPUT);
+  # add the hash as the value of the new key data
+  # (once per doc) reference is needed
+  $docs[$i]{ data } = \%freq;
 }
 
-print "\n";
+# print Dumper(@docs);
 
-#my %keyword ;
-my @keywords_infos ;
-# parse the keyword list
-foreach my $keyword(@keyword_list) {
-  my %keyword ;
-  # convert array values to hashes
-  $keyword{ name } = $keyword;
-  my ($found, $idf);
-  # by default, found zero occurrences
-  $found = 0;
+# Create a hash of words and their idf
+my %words_idf;
 
-#  print "Fréquence de \"$keyword{ name }\"\n" ;
-  # look for the term in every doc
-  foreach my $doc(@docs) {
-    my %doc = %$doc;
+# first compute in how many docs the term is found
+foreach my $document(@docs) {
+  # declaring dereference is needed
+  # to use each/keys/values
+  my %document = %$document;
 
-    open (DOC, "<", $doc{ output });
-    while (<DOC>){
-      my @line_elt = split (/\t/ , $_);
-
-      # if the first column matches the word
-      # increment var
-      # and put value in hash
-      # key is doc name and value is term frequency in doc
-      if ($line_elt[0] eq $keyword){
-	$found++;
-	chomp($line_elt[1]) ;
-
-	$keyword{ $doc{ name } } = $line_elt[1];
-#	print "\t" . $doc{ name } . " : " . $line_elt[1] . "\n";
-	last;
+  while (my ($k,$v) = each %document) {
+    if ($k eq 'data') {
+      my %data = %$v;
+      while (my ($term, $freq) = each %data) {
+	# print $term . $freq ."\n";
+	$words_idf{ $term }++;
       }
     }
-    close (DOC);
   }
+}
+
+# compute the cardinality (ie. the number of docs)
+my $D_cardinality = scalar(@docs);
+
+# second compute the idf
+while (my ($word, $value) = each %words_idf) {
+  $words_idf{ $word } = log($D_cardinality / $value);
+}
 
 
-  # the number of texts where the term is
-#  print "\t\tTrouvé dans $found textes\n";
-
-  # good,
-  # now compute idf
-  if ($found != 0) {
-    # compute idf
-    $idf = log(abs($D_cardinality) /  $found) ;
-
-#    print "\t\tidf: " . $idf . "\n\n";
+# and last compute if * idf
+for (my $i = 0; $i < @docs; $i++) {
+  my $word_freq = $docs[$i]{ data };
+  foreach my $term ( keys %$word_freq ) {
+    $docs[$i]{ data }{ $term } *=  $words_idf{ $term };
+    # print "$word\n";
   }
-  else {
-    $idf = "";
-  }
-  $keyword{ idf } = $idf;
-
-  push @keywords_infos, \%keyword;
 }
 
 print "\n";
 
 
-# here comes the big stuff !
 
-# oh yeah and the goal is to compute tf * idf
-foreach my $keyword(@keywords_infos) {
-  print $$keyword{ name } . " :\n";
+################################################
+# Now we have every results we need to compare #
+################################################
 
-  # each keyword has it's own idf
-  # we store it now to ease the reading
-  my $idf = $$keyword{ idf };
-  print "\tidf:" . $idf . "\n";
 
-  while (my ($key,$value) = each %$keyword) {
-    if ($key ne 'name' && $key ne 'idf') {
-      print "\t$key\t$value\n";
-      print "\t\ttf * idf = " . $value * $idf . "\n";
+my @matrix ;
+
+for (my $i = 0; $i < @docs; $i++) { 
+  for (my $j = @docs - 1 ; $j >= $i;$j--) {
+    my $base_word = $docs[$i]{ data };
+    my $comp_word = $docs[$j]{ data };
+    my $numerator;
+    foreach my $term ( keys %$base_word ) {
+      $numerator += $docs[$i]{ data }{ $term } * $docs[$i]{ data }{ $term } if exists $docs[$i]{ data }{ $term };
     }
+    print $numerator . "\n";
   }
-  print "\n";
 }
-

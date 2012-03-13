@@ -134,7 +134,6 @@ for (my $i = 0; $i < @docs; $i++) {
   # declare new column we want to fill
   my @matrix_column;
 
-
   for (my $j = @docs - 1 ; $j >= $i;$j--) {
     my $base_word = $docs[$i]{ data };
     my $comp_word = $docs[$j]{ data };
@@ -149,9 +148,22 @@ for (my $i = 0; $i < @docs; $i++) {
     }
     $denominator = sqrt($norm_doc1) * sqrt($norm_doc2);
     $cos = $numerator / $denominator ;
+
+    # since we proceed from the end
+    # notice the $j--
+    # we need to add values at the beginning of array,
+    # not the end (the other way round)
     unshift @matrix_column, $cos;
   }
+
+  # still because we start from the end,
+  # we need to fill empty rows
+  unshift @matrix_column, "" foreach(1..$i);
+
+  # now we add the name of the column at the beginning
   unshift @matrix_column, $docs[$i]{ name };
+
+  # and we can push it to our array!
   push @matrix, [@matrix_column];
 }
 

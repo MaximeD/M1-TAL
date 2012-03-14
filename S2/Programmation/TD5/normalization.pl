@@ -38,7 +38,6 @@ sub normalization {
 
    my $string = <INPUT>;
 
-   $string = decode("iso-8859-1", $string);
    $string = NFD($string);
    $string =~ s/\pM//og;
    print OUTPUT "$string\n";
